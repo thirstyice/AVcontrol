@@ -1,0 +1,38 @@
+:root {
+	--menu-width: 130px;
+}
+
+#menu {
+	box-sizing: border-box;
+	list-style: none;
+	padding:0;
+	padding-top: 20px;
+	margin:0;
+	width: var(--menu-width);
+	display:inline-block;
+	float: left;
+}
+#menu>li {
+	text-align: right;
+}
+#menu>li:hover {
+	background-color: #111;
+}
+#menu>li>a {
+	line-height: 50px;
+	padding-left: 10px;
+	padding-right: 5px;
+}
+#iframe-container {
+	height: 100%;
+	display: inline-block;
+	padding: 5px;
+	padding-left: 0;
+	width: calc(100% - var(--menu-width));
+	box-sizing: border-box;
+}
+iframe {
+	height: 100%;
+	width: 100%;
+	box-sizing: border-box;
+}
