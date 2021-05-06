@@ -5,11 +5,27 @@ const app = express();
 const port = 7077;
 const { Server } = require("socket.io");
 
+const southiPadip = "192.168.100.253";
+const northiPadip = "192.168.100.254";
+
 
 const httpsOptions = {
 	key: fs.readFileSync('key.pem'),
 	cert: fs.readFileSync('cert.pem')
 };
+
+function iPadRedirect(req, res, next) {
+	if (req.ip === northiPadip) {
+		res.redirect("/pages-north");
+	} else if (req.ip === southiPadip) {
+		res.redirect("/pages-south");
+	} else {
+		next()
+		console.log("continuing");
+	}
+}
+
+// app.use("/pages", iPadRedirect);
 
 app.use("/", express.static("public"));
 
