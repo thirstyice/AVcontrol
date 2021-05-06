@@ -9,3 +9,12 @@ body {
 	height: calc(100% - 2px);
 	padding: 1px; /* This keeps elements from putting their margins outside of body */
 }
+h1 {
+	text-align: center;
+}
+a {
+	height: 100%;
+	width: 100%s;
+	color: #fff;
+
+}

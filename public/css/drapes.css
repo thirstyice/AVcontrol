@@ -1,0 +1,20 @@
+table {
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+}
+thead {
+	background-color: #555;
+	font-weight: bolder;
+}
+thead td {
+	padding: 5px;
+}
+tbody td {
+	width: 100px;
+	height: 100px;
+	background-color: #111;
+}
+tbody td:hover {
+	background-color: #000;
+}

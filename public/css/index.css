@@ -32,6 +32,7 @@
 	box-sizing: border-box;
 }
 iframe {
+	min-height: 440px;
 	height: 100%;
 	width: 100%;
 	box-sizing: border-box;
