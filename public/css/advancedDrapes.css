@@ -15,8 +15,27 @@ tbody > tr {
 }
 tbody td {
 	width: 100px;
-	background-color: #111;
+}
+tbody td.open {
+	background-color: #242;
+}
+tbody td.close {
+	background-color: #422;
 }
 tbody td:hover {
 	background-color: #000;
+}
+span {
+	display: inline-block;
+	box-sizing: border-box;
+	width: 50%;
+	height: 100%;
+}
+span:first-child {
+	float:left;
+}
+iframe {
+	width: 100%;
+	height: 100%;
+	border: 0;
 }
