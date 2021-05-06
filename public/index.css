@@ -15,7 +15,7 @@
 #menu>li {
 	text-align: right;
 }
-#menu>li:hover {
+#menu>li:hover, #menu>li.active {
 	background-color: #111;
 }
 #menu>li>a {
