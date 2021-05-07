@@ -47,6 +47,7 @@ io.on('connection', (socket) => {
 	});
 
 	socket.on("moveDrape", (drape) => {
+		console.log(drape.direction);
 		if (drape.type == "velour") {
 			if (drape.id == "walls") {
 				if (socket.address != southiPadip || airWallIsDown == 0) {
@@ -67,7 +68,7 @@ io.on('connection', (socket) => {
 					velour[drape.direction](4);
 				}
 			} else {
-				velour[drape.direction](drape.id);
+				velour[ drape.direction ](drape.id);
 			}
 		} else if (drape.type == "blackouts") {
 			if (drape.id == "viewing") {

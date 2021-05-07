@@ -4,13 +4,13 @@ const path = ""
 
 exports.open = function (curtainId) {
 	console.log("Opening velour: " + curtainId);
-	serialport.write("01" + curtainId.padStart(2,"0") + "U");
+	//serialport.write("01" + curtainId.padStart(2,"0") + "U");
 };
 exports.close = function (curtainId) {
 	console.log("Closing velour: " + curtainId);
-	serialport.write("01" + curtainId.padStart(2,"0") + "D");
+	//serialport.write("01" + curtainId.padStart(2,"0") + "D");
 };
 exports.close = function (curtainId) {
 	console.log("Stopping velour: " + curtainId);
-	serialport.write("01" + curtainId.padStart(2,"0") + "S");
+	//serialport.write("01" + curtainId.padStart(2,"0") + "S");
 };

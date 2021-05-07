@@ -1,3 +1,5 @@
+const socket = io();
+
 window.onload = function() {
 	tableArrray.forEach((row) => {
 		var rowElement = document.createElement("tr");
@@ -6,7 +8,7 @@ window.onload = function() {
 			if (item != "") {
 				var itemAction = item.replace(/[0-9]/g, "");
 				var itemId = item.replace(/[a-z]/g, "");
-				itemElement.setAttribute("onclick", "click(" + itemAction + itemId + ")")
+				itemElement.setAttribute("onclick", "clicked('" + itemAction + "'," + itemId + ")")
 				itemElement.setAttribute("class", itemAction);
 				itemElement.innerText = itemAction.replace(/^\w/, (c) => c.toUpperCase());
 			}
@@ -15,6 +17,12 @@ window.onload = function() {
 		document.getElementsByTagName("tbody")[0].appendChild(rowElement);
 	});
 }
-function click(curtainAction, curtainId) {
-
+function clicked(curtainAction, curtainId) {
+	var drape = {
+		type: drapeType,
+		id: curtainId,
+		direction: curtainAction
+	};
+	console.log(drape);
+	socket.emit("moveDrape", drape);
 }
