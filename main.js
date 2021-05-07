@@ -73,9 +73,25 @@ io.on('connection', (socket) => {
 			}
 		} else if (drape.type == "blackouts") {
 			if (drape.id == "viewing") {
-				blackouts[drape.direction]();
+				if (socket.address != northiPadip || airWallIsDown == 0) {
+					blackouts[drape.direction](1);
+				}
 			} else if (drape.id == "windows") {
-				blackouts[drape.direction]();
+				if (socket.address != southiPadip || airWallIsDown == 0) {
+					blackouts[drape.direction](8);
+					blackouts[drape.direction](9);
+					blackouts[drape.direction](10);
+					blackouts[drape.direction](11);
+					blackouts[drape.direction](12);
+				}
+				if (socket.address != northiPadip || airWallIsDown == 0) {
+					blackouts[drape.direction](2);
+					blackouts[drape.direction](3);
+					blackouts[drape.direction](4);
+					blackouts[drape.direction](5);
+					blackouts[drape.direction](6);
+					blackouts[drape.direction](7);
+				}
 			} else {
 				blackouts[drape.direction](drape.id);
 			}
