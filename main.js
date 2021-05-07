@@ -4,6 +4,10 @@ const express = require("express");
 const app = express();
 const port = 7077;
 const { Server } = require("socket.io");
+const velour = require("./modules/velour.js")
+const blackouts = require("./modules/blackouts")
+
+var airWallIsDown = 0;
 
 const southiPadip = "192.168.100.253";
 const northiPadip = "192.168.100.254";
@@ -25,7 +29,7 @@ function iPadRedirect(req, res, next) {
 	}
 }
 
-// app.use("/pages", iPadRedirect);
+app.use("/pages", iPadRedirect);
 
 app.use("/", express.static("public"));
 
@@ -41,6 +45,42 @@ io.on('connection', (socket) => {
 			clients: io.sockets.sockets.size
 		}
 		io.emit("set-system-info", info);
+	});
+
+	socket.on("open", (drape) => {
+		if (drape.type == "velour") {
+			if (drape.id == "walls") {
+					if (socket.address != northiPadip || airWallIsDown == 0) {
+						velour.open(3);
+						velour.open(4);
+					}
+					if (socket.address != southiPadip || airWallIsDown == 0) {
+						velour.open(1);
+						velour.open(2);
+					}
+				}
+			} else if (drape.id == "windows") {
+					if (socket.address != northiPadip || airWallIsDown == 0) {
+						velour.open(3);
+						velour.open(4);
+					}
+					if (socket.address != southiPadip || airWallIsDown == 0) {
+						velour.open(1);
+						velour.open(2);
+					}
+				}
+			} else {
+				velour.open(drape.id);
+			}
+		} else if (drape.type == "blackouts") {
+			if (drape.id == "viewing") {
+
+			} else if (drape.id == "windows") {
+
+			} else {
+				blackouts.open(drape.id);
+			}
+		}
 	});
 
 });

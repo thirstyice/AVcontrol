@@ -20,3 +20,9 @@ tbody td {
 tbody td:hover {
 	background-color: #000;
 }
+.Open {
+	background-color: #242;
+}
+.Close {
+	background-color: #422;
+}
