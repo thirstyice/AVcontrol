@@ -23,6 +23,5 @@ function clicked(curtainAction, curtainId) {
 		id: curtainId,
 		direction: curtainAction
 	};
-	console.log(drape);
 	socket.emit("moveDrape", drape);
 }
