@@ -42,11 +42,11 @@ function getDirectionCode(direction) {
 exports.move = function (id, direction) {
 	var directionCode = getDirectionCode(direction);
 	var sendString = "";
-	if (curtainId == "north") {
+	if (id == "north") {
 		sendString = "#DEVICE,cspaceQSE,3," + directionCode;
-	} else if (curtainId == "south") {
+	} else if (id == "south") {
 		sendString = "#DEVICE,cspaceQSE,2," + directionCode;
-	} else if (curtainId == "all") {
+	} else if (id == "all") {
 		sendString = "#DEVICE,cspaceQSE,1," + directionCode;
 	} else {
 		id = decodeID(id);

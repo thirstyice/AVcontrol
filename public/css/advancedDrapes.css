@@ -22,7 +22,7 @@ tbody td.open {
 tbody td.close {
 	background-color: #422;
 }
-tbody td:hover {
+tbody td.close:hover, tbody td.open:hover {
 	background-color: #000;
 }
 span {
