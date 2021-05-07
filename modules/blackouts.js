@@ -1,19 +1,57 @@
 const SerialPort = require("serialport");
 const path = ""
-//const serialport = new SerialPort(path, {baudRate: 9600, dataBits: 8, stopBits: 1, parity: 'none'}
+//const serialport = new SerialPort(path, {baudRate: 9600, dataBits: 8, stopBits: 1, parity: 'none'});
 
-exports.open = function (curtainId) {
-	console.log("Opening blackout: " + curtainId);
-	serialport.send("#DEVICE,1," + curtainId + ",18");
-};
-exports.close = function (curtainId) {
-	console.log("Opening blackout: " + curtainId);
-	serialport.send("#DEVICE,1," + curtainId + ",19");
-};
-exports.stop = function (curtainId) {
-	console.log("Stopping blackout: " + curtainId);
-	serialport.send("#DEVICE,1," + curtainId + ",20");
+
+// #DEVICE,T105 View Window,1,18 -> open viewing window
+// #DEVICE, T105 Event   1,1,19 -> close SE
+
+
+// T105 Event   1 -> SE
+// T105 Event   2 -> S
+// T105 Event   3 -> SSW
+// T105 Event   4 -> SW
+// T105 Event   5 -> WSW
+// T105 Event   6 -> W
+
+// T105 Event   7 -> WNW
+// T105 Event   8 -> NW; Replace with: 0x01E983DF
+// T105 Event   9 -> N
+// T105 Event   10 -> N Wall
+// T105 Event   11 -> Beside booth; Replace with: 0x01E983E0
+
+function decodeID(id) {
+	switch (id) {
+		case 0: return "T105 View Window"; break;
+		case 8: return "01E983DF"; break;
+		case 11: return "01E983E0"; break;
+		default: return "T105 Event   " + id;
+	}
 }
-exports.recallPosition(curtainId) {
-	serialport.send("#DEVICE,1," + curtainId + ",3");
+
+function getDirectionCode(direction) {
+	switch (direction) {
+		case "open": return "18"; break;
+		case "close": return "19"; break;
+		case "stop": return "20"; break;
+		case "recall": return "3"; break;
+		default: console.log("Blackouts: unknown direction");
+	}
+}
+
+exports.move = function (id, direction) {
+	var directionCode = getDirectionCode(direction);
+	var sendString = "";
+	if (curtainId == "north") {
+		sendString = "#DEVICE,cspaceQSE,3," + directionCode;
+	} else if (curtainId == "south") {
+		sendString = "#DEVICE,cspaceQSE,2," + directionCode;
+	} else if (curtainId == "all") {
+		sendString = "#DEVICE,cspaceQSE,1," + directionCode;
+	} else {
+		id = decodeID(id);
+		sendString = "#DEVICE," + id + ",1," + directionCode;
+	}
+	//serialport.write(sendString);
+	console.log("Blackout: sending: " + sendString);
 }

@@ -77,23 +77,15 @@ io.on('connection', (socket) => {
 					blackouts[drape.direction](1);
 				}
 			} else if (drape.id == "windows") {
-				if (socket.address != southiPadip || airWallIsDown == 0) {
-					blackouts[drape.direction](8);
-					blackouts[drape.direction](9);
-					blackouts[drape.direction](10);
-					blackouts[drape.direction](11);
-					blackouts[drape.direction](12);
-				}
-				if (socket.address != northiPadip || airWallIsDown == 0) {
-					blackouts[drape.direction](2);
-					blackouts[drape.direction](3);
-					blackouts[drape.direction](4);
-					blackouts[drape.direction](5);
-					blackouts[drape.direction](6);
-					blackouts[drape.direction](7);
+				if (socket.address == southiPadip && airWallIsDown == 1) {
+					blackouts.move("south", drape.direction);
+				} else if (socket.address == northiPadip && airWallIsDown == 1) {
+					blackouts.move("north", drape.direction);
+				} else {
+					blackouts.move("all", drape.direction);
 				}
 			} else {
-				blackouts[drape.direction](drape.id);
+				blackouts.move(drape.id, drape.direction);
 			}
 		}
 	});
