@@ -59,12 +59,14 @@ io.on('connection', (socket) => {
 				}
 			} else if (drape.id == "windows") {
 				if (socket.address != southiPadip || airWallIsDown == 0) {
-					velour[drape.direction](1);
-					velour[drape.direction](2);
+					velour[drape.direction](9);
+					velour[drape.direction](10);
 				}
 				if (socket.address != northiPadip || airWallIsDown == 0) {
-					velour[drape.direction](3);
-					velour[drape.direction](4);
+					velour[drape.direction](5);
+					velour[drape.direction](6);
+					velour[drape.direction](7);
+					velour[drape.direction](8);
 				}
 			} else {
 				velour[ drape.direction ](drape.id);
