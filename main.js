@@ -25,7 +25,6 @@ function iPadRedirect(req, res, next) {
 		res.redirect("/pages-south");
 	} else {
 		next()
-		console.log("continuing");
 	}
 }
 
@@ -47,38 +46,36 @@ io.on('connection', (socket) => {
 		io.emit("set-system-info", info);
 	});
 
-	socket.on("open", (drape) => {
+	socket.on("moveDrape", (drape) => {
 		if (drape.type == "velour") {
 			if (drape.id == "walls") {
-					if (socket.address != northiPadip || airWallIsDown == 0) {
-						velour.open(3);
-						velour.open(4);
-					}
-					if (socket.address != southiPadip || airWallIsDown == 0) {
-						velour.open(1);
-						velour.open(2);
-					}
+				if (socket.address != southiPadip || airWallIsDown == 0) {
+					velour[drape.direction](1);
+					velour[drape.direction](2);
+				}
+				if (socket.address != northiPadip || airWallIsDown == 0) {
+					velour[drape.direction](3);
+					velour[drape.direction](4);
 				}
 			} else if (drape.id == "windows") {
-					if (socket.address != northiPadip || airWallIsDown == 0) {
-						velour.open(3);
-						velour.open(4);
-					}
-					if (socket.address != southiPadip || airWallIsDown == 0) {
-						velour.open(1);
-						velour.open(2);
-					}
+				if (socket.address != southiPadip || airWallIsDown == 0) {
+					velour[drape.direction](1);
+					velour[drape.direction](2);
+				}
+				if (socket.address != northiPadip || airWallIsDown == 0) {
+					velour[drape.direction](3);
+					velour[drape.direction](4);
 				}
 			} else {
-				velour.open(drape.id);
+				velour[drape.direction](drape.id);
 			}
 		} else if (drape.type == "blackouts") {
 			if (drape.id == "viewing") {
-
+				blackouts[drape.direction]();
 			} else if (drape.id == "windows") {
-
+				blackouts[drape.direction]();
 			} else {
-				blackouts.open(drape.id);
+				blackouts[drape.direction](drape.id);
 			}
 		}
 	});

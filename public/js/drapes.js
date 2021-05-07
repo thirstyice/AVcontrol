@@ -10,23 +10,20 @@ window.onload = function() {
 		heading = headings.item(i);
 		["Open", "Close"].forEach((direction, j) => {
 			var node = document.createElement("td");
-			node.setAttribute("onclick", "click(" + heading.id + "," + direction + ")");
+			node.setAttribute("onclick", "clicked('" + heading.id + "','" + direction + "')");
 			node.setAttribute("class", direction);
 			node.innerText = direction;
 			document.getElementById(direction).appendChild(node);
 		});
-
-
 	}
-
 }
 
-function click(heading, direction) {
+function clicked(heading, direction) {
 	var drape = {
 		type: "",
-		id: ""
+		id: "",
+		direction: direction.toLowerCase()
 	};
-	direction = direction.toLowerCase();
 	switch (heading) {
 		case "wallDrapes":
 			drape.type = "velour";
@@ -48,5 +45,5 @@ function click(heading, direction) {
 		console.error("Unknown blind");
 		return;
 	}
-	socket.emit(direction, drape);
+	socket.emit("moveDrape", drape);
 }
