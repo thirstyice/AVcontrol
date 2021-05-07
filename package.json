@@ -18,6 +18,7 @@
   "homepage": "https://github.com/thirstyice/AVcontrol#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "serialport": "^9.0.7",
     "socket.io": "^4.0.1"
   }
 }
