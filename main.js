@@ -40,13 +40,18 @@ var server = https.createServer(httpsOptions, app);
 const io = new Server(server);
 
 io.on('connection', (socket) => {
-	console.log("User connected from: " + socket.handshake.address);
-
 	socket.on("set-system-info", () => {
+		var ips = [];
+		for (const [key, value] of io.sockets.sockets) {
+			if (ips.includes(value.handshake.address) === false) {
+				ips.push(value.handshake.address);
+			}
+		}
 		var info = {
 			version:require("./package.json").version,
-			clients: io.sockets.sockets.size
+			clients: ips.length
 		}
+
 		io.emit("set-system-info", info);
 	});
 
