@@ -9,6 +9,7 @@ function capFirstLetter(string) {
 
 socket.on("set-system-info", (info) => {
 	var table = document.getElementById("info");
+	table.innerHTML = "";
 	for (const [key, value] of Object.entries(info)) {
 		var row = document.createElement("tr");
 		row.appendChild(document.createElement("td")).innerText = capFirstLetter(`${key}:`).replace(/_/g, ' ');
