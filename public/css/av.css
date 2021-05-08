@@ -1,0 +1,102 @@
+:root {
+	--muteButtonHeight: 50px;
+	--muteButtonWidth: 20px;
+}
+#buttonContainer {
+	height: calc(100% - var(--muteButtonHeight));
+}
+span {
+	display: inline-block;
+	box-sizing: border-box;
+	width: 50%;
+	height: 100%;
+}
+span:first-child {
+	float:left;
+}
+iframe {
+	width: 100%;
+	height: 100%;
+	border: 0;
+}
+table {
+	width:100%;
+	text-align: center;
+	height:100%;
+}
+tbody {
+	height:100%;
+}
+tbody td {
+	width: 100px;
+}
+tbody .button:hover {
+	background-color: #000;
+}
+.northTable>tbody>tr>td:first-child, .southTable>tbody>tr>td:last-child {
+	width: 1%;
+}
+.northTable h1 {
+	text-align: right;
+}
+.southTable h1 {
+	text-align: left;
+}
+#video, #screen, #audio {
+	height:100%;
+}
+#video tr, #screen tr, #audio tr {
+	height: 50%;
+}
+#video .button {
+	background-color: #442;
+}
+#audio .button {
+	background-color: #224;
+}
+#screen .button {
+	background-color: #542;
+}
+#audioControls {
+	width: 100%;
+	height: var(--muteButtonHeight);
+}
+
+#sliderContainer {
+	width: calc(100% - 25px);
+}
+#sliderContainer>input {
+	width: 90%;
+	appearance: none;
+	-webkit-appearance: none;
+	background: #444;
+	outline: none;
+
+}
+#sliderContainer>input::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 25px;
+	height: 25px;
+	background: #66C;
+	cursor: pointer;
+}
+
+#sliderContainer>input::-moz-range-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  background: #66C;
+  cursor: pointer;
+}
+#muteButtonContainer {
+	box-sizing: border-box;
+	width: var(--muteButtonWidth);
+	height: var(--muteButtonHeight);
+}
+#muteButtonContainer button {
+	box-sizing: border-box;
+	width: 100%;
+	height: 100%;
+}

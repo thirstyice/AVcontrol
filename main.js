@@ -19,12 +19,16 @@ const httpsOptions = {
 };
 
 function iPadRedirect(req, res, next) {
-	if (req.ip === northiPadip) {
-		res.redirect("/pages-north");
-	} else if (req.ip === southiPadip) {
-		res.redirect("/pages-south");
+	if (airWallIsDown == 1) {
+		if (req.ip === northiPadip) {
+			res.redirect("/pages-north");
+		} else if (req.ip === southiPadip) {
+			res.redirect("/pages-south");
+		} else {
+			next();
+		}
 	} else {
-		next()
+		next();
 	}
 }
 
@@ -36,7 +40,7 @@ var server = https.createServer(httpsOptions, app);
 const io = new Server(server);
 
 io.on('connection', (socket) => {
-	console.log("User connected on socket " + socket);
+	console.log("User connected from: " + socket.handshake.address);
 
 	socket.on("set-system-info", () => {
 		var info = {
@@ -89,6 +93,36 @@ io.on('connection', (socket) => {
 			}
 		}
 	});
+
+	socket.on("video", (command) => {
+		// TODO:
+	});
+	socket.on("audio", (command) => {
+		// TODO:
+	});
+	socket.on("screen", (command) => {
+		// TODO:
+	});
+	socket.on("getAudioSlider", () => {
+		var path = new URL(socket.request.headers.referer).pathname
+		path = path.substr(0, path.lastIndexOf("/"));
+		var sliderId = ""
+		if (airWallIsDown == 0) {
+			if (path == "/pages") {
+				sliderId = "combined";
+			}
+		} else {
+			switch (path) {
+				case "/pages-south": sliderId = "south"; break;
+				case "/pages-north": sliderId = "north"; break;
+			}
+		}
+		var audioLevel = 50; // TODO: get the real level
+		var muteStatus = false;
+		socket.emit("audioSlider", { id:sliderId, level:audioLevel, muteStatus: muteStatus });
+	});
+
+	// TODO: Deal with audioSlider and muteButton changes
 
 });
 

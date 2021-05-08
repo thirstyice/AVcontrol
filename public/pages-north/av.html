@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+	<head>
+		<link rel="stylesheet" href="/css/main.css">
+		<link rel="stylesheet" href="/css/av.css">
+		<script src="/socket.io/socket.io.js"></script>
+		<script type="text/javascript">
+			var tables = {
+				video: [
+					["bluRay","north1"],
+					["booth","north2"]
+				],
+				screen: [
+					["northAdjustUp","northUp"],
+					["northAdjustDown","northDown"]
+				],
+				audio: [
+					["bluRay","north1"],
+					["booth","north2"]
+				]
+			}
+		</script>
+		<script src="/js/av.js" charset="utf-8"></script>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<table class="northTable" id="buttonContainer">
+			<tbody>
+				<tr>
+					<td>
+						<h1>North</h1>
+						<h1>Video</h1>
+					</td>
+					<td>
+						<table id="video">
+							<tbody>
+
+							</tbody>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<h1>North</h1>
+						<h1>Screen</h1>
+					</td>
+					<td>
+						<table id="screen">
+							<tbody>
+
+							</tbody>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<h1>North</h1>
+						<h1>Audio</h1>
+					</td>
+					<td>
+						<table id="audio">
+							<tbody>
+
+							</tbody>
+						</table>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<div>
+			<table id="audioControls">
+				<tbody>
+					<tr>
+						<td id="sliderContainer"></td>
+						<td id="muteButtonContainer"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</body>
+</html>

@@ -1,6 +1,10 @@
 :root {
 	--menu-width: 130px;
 }
+html {
+	min-width: 570px;
+	overflow: scroll;
+}
 
 #menu {
 	box-sizing: border-box;
@@ -32,7 +36,7 @@
 	box-sizing: border-box;
 }
 iframe {
-	min-height: 440px;
+	min-height: 390px;
 	height: 100%;
 	width: 100%;
 	box-sizing: border-box;
