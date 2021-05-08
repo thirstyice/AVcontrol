@@ -1,17 +1,22 @@
 window.onload = function () {
+	var url = new URL(window.location)
+	var id;
+	if (url.searchParams.has("page")) {
+		id = url.searchParams.get("page");
+	}	else {
+		id = "system-info"
+	}
+	document.getElementsByTagName("iframe")[0].setAttribute("src", "pages/" + id + ".html");
 	var menuItems = document.getElementById("menu").children;
 	for (var i=0; i < menuItems.length; i++) {
-		var item = menuItems.item(i);
-		item.setAttribute("onclick", "select(this.id)");
+		if (
+			menuItems.item(i).getElementsByTagName("a")[0].getAttribute("href")
+			==
+			"?page=" + id
+		) {
+			menuItems.item(i).classList.add("active");
+		} else {
+			menuItems.item(i).classList.remove("active");
+		}
 	}
-}
-
-function select(id) {
-	var menuItem = document.getElementById(id);
-	var formerActive = document.getElementsByClassName("active");
-	for (var i=0; i < formerActive.length; i++) {
-		formerActive.item(i).classList.remove("active");
-	}
-	menuItem.classList.add("active");
-	document.getElementsByTagName("iframe")[0].setAttribute("src", "pages/" + id + ".html")
 }
