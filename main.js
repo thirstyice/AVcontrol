@@ -84,7 +84,7 @@ io.on('connection', (socket) => {
 		} else if (drape.type == "blackouts") {
 			if (drape.id == "viewing") {
 				if (socket.handshake.address != northiPadip || airWallIsDown == 0) {
-					blackouts[drape.direction](1);
+					blackouts.move(0, drape.direction);
 				}
 			} else if (drape.id == "windows") {
 				if (socket.handshake.address == southiPadip && airWallIsDown == 1) {
