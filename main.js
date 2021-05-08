@@ -4,13 +4,14 @@ const express = require("express");
 const app = express();
 const port = 7077;
 const { Server } = require("socket.io");
-const velour = require("./modules/velour.js")
-const blackouts = require("./modules/blackouts")
+const velour = require("./modules/velour.js");
+const blackouts = require("./modules/blackouts");
+const paradigm = require("./modules/paradigm");
 
 var airWallIsDown = 0;
 
-const southiPadip = "192.168.100.253";
-const northiPadip = "192.168.100.254";
+const southiPadip = "::ffff:192.168.100.253";
+const northiPadip = "::ffff:192.168.100.254";
 
 
 const httpsOptions = {
@@ -58,20 +59,20 @@ io.on('connection', (socket) => {
 	socket.on("moveDrape", (drape) => {
 		if (drape.type == "velour") {
 			if (drape.id == "walls") {
-				if (socket.address != southiPadip || airWallIsDown == 0) {
+				if (socket.handshake.address != southiPadip || airWallIsDown == 0) {
 					velour[drape.direction](1);
 					velour[drape.direction](2);
 				}
-				if (socket.address != northiPadip || airWallIsDown == 0) {
+				if (socket.handshake.address != northiPadip || airWallIsDown == 0) {
 					velour[drape.direction](3);
 					velour[drape.direction](4);
 				}
 			} else if (drape.id == "windows") {
-				if (socket.address != southiPadip || airWallIsDown == 0) {
+				if (socket.handshake.address != southiPadip || airWallIsDown == 0) {
 					velour[drape.direction](9);
 					velour[drape.direction](10);
 				}
-				if (socket.address != northiPadip || airWallIsDown == 0) {
+				if (socket.handshake.address != northiPadip || airWallIsDown == 0) {
 					velour[drape.direction](5);
 					velour[drape.direction](6);
 					velour[drape.direction](7);
@@ -82,13 +83,13 @@ io.on('connection', (socket) => {
 			}
 		} else if (drape.type == "blackouts") {
 			if (drape.id == "viewing") {
-				if (socket.address != northiPadip || airWallIsDown == 0) {
+				if (socket.handshake.address != northiPadip || airWallIsDown == 0) {
 					blackouts[drape.direction](1);
 				}
 			} else if (drape.id == "windows") {
-				if (socket.address == southiPadip && airWallIsDown == 1) {
+				if (socket.handshake.address == southiPadip && airWallIsDown == 1) {
 					blackouts.move("south", drape.direction);
-				} else if (socket.address == northiPadip && airWallIsDown == 1) {
+				} else if (socket.handshake.address == northiPadip && airWallIsDown == 1) {
 					blackouts.move("north", drape.direction);
 				} else {
 					blackouts.move("all", drape.direction);
@@ -128,6 +129,25 @@ io.on('connection', (socket) => {
 	});
 
 	// TODO: Deal with audioSlider and muteButton changes
+
+	socket.on("getLightingPresets", () => {
+		var presets;
+		if (airWallIsDown == 0) {
+			presets = { combined: paradigm.getPresets("combined") };
+		} else {
+			if (socket.handshake.address.includes(northiPadip)) {
+				presets = { north: paradigm.getPresets("north") };
+			} else if (socket.handshake.address.includes(southiPadip)) {
+				presets = { south: paradigm.getPresets("south") };
+			} else {
+				presets = {
+					north: paradigm.getPresets("north"),
+					south: paradigm.getPresets("south")
+				}
+			}
+		}
+		socket.emit("setLightingPresets", presets);
+	});
 
 });
 

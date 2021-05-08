@@ -1,0 +1,23 @@
+table {
+	width:100%;
+	text-align: center;
+	height:100%;
+}
+td {
+	width: 100px;
+}
+#presets > tr > td {
+	table-layout: fixed;
+}
+#north .button {
+	background-color: #553;
+}
+#south .button {
+	background-color: #355;
+}
+#combined .button {
+	background-color: #242;
+}
+#north .button:hover, #south .button:hover, #combined .button:hover {
+	background-color: #111;
+}
