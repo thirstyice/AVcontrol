@@ -1,20 +1,20 @@
 const socket = io();
 var names = {
-	bluRay: "Blu-Ray",
-	booth: "Booth",
-	north1: "North 1",
-	north2:	"North 2",
-	wall: "Wall Box",
-	south1: "South 1",
-	south2: "South 2",
-	northAdjustUp: "Adj Up",
-	northAdjustDown: "Adj Down",
-	northUp: "Screen Up",
-	northDown: "Screen Down",
-	southAdjustUp: "Adj Up",
-	southAdjustDown: "Adj Down",
-	southUp: "Screen Up",
-	southDown: "Screen Down"
+	extron: {
+		1: "North 1",
+		2:	"North 2",
+		3: "South 1",
+		4: "South 2",
+		5: "Wall Box",
+		6: "Booth",
+		7: "Blu-Ray",
+	},
+	screens: {
+		adjustUp: "Adj Up",
+		adjustDown: "Adj Down",
+		up: "Screen Up",
+		down: "Screen Down"
+	}
 }
 socket.on("audioSlider", (sliderValues) => {
 	if (sliderValues.id == "") {
@@ -42,16 +42,25 @@ socket.on("audioSlider", (sliderValues) => {
 window.onload = function() {
 	socket.emit("getAudioSlider");
 	if ( typeof tables !== 'undefined' ) {
-		["video", "screen", "audio"].forEach((mediaType) => {
-			if (tables[mediaType]) {
-				tables[mediaType].forEach((row) => {
+		[
+			"video",
+			"audio",
+			"screen"
+		].forEach((mediaType) => {
+			var device = mediaType;
+			switch (mediaType) {
+				case "audio": case "video": device = "extron"; break;
+				case "screen": device = "screens"; break;
+			}
+			if (tables[device]) {
+				tables[device].forEach((row) => {
 					var rowElement = document.createElement("tr");
 					row.forEach((item) => {
 						var itemElement = document.createElement("td");
 						if (item != "") {
-							itemElement.setAttribute("onclick", "clicked(" + mediaType + "," + item + ")");
+							itemElement.setAttribute("onclick", device + "('" + mediaType + "'," + item + ")");
 							itemElement.setAttribute("class", "button");
-							itemElement.innerText = names[item];
+							itemElement.innerText = names[device][item];
 						}
 						rowElement.appendChild(itemElement);
 					});
@@ -61,6 +70,13 @@ window.onload = function() {
 		});
 	}
 }
-function clicked(mediaType, command) {
-	socket.emit(mediaType, command);
+function extron(mediaType, id) {
+	var info = {
+		media: mediaType.toString(),
+		input: id
+	}
+	socket.emit("extron", info);
+}
+function screens() {
+
 }

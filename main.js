@@ -7,6 +7,7 @@ const { Server } = require("socket.io");
 const velour = require("./modules/velour.js");
 const blackouts = require("./modules/blackouts");
 const paradigm = require("./modules/paradigm");
+const extron = require("./modules/extron");
 
 var airWallIsDown = 0;
 
@@ -99,14 +100,10 @@ io.on('connection', (socket) => {
 			}
 		}
 	});
-
-	socket.on("video", (command) => {
-		// TODO:
+	socket.on("extron", (info) => {
+		extron.setPath(info.input, "all", info.media);
 	});
-	socket.on("audio", (command) => {
-		// TODO:
-	});
-	socket.on("screen", (command) => {
+	socket.on("screens", (command) => {
 		// TODO:
 	});
 	socket.on("getAudioSlider", () => {

@@ -1,5 +1,5 @@
 const SerialPort = require("serialport");
-const serialPpath = ""
+const serialPath = ""
 //const serialport = new SerialPort(serialPath, {baudRate: 9600, dataBits: 8, stopBits: 1, parity: 'none'});
 
 exports.getPresets = function (space) {
