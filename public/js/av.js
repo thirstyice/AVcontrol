@@ -7,13 +7,21 @@ var names = {
 		4: "South 2",
 		5: "Wall Box",
 		6: "Booth",
-		7: "Blu-Ray",
+		7: "Blu-Ray"
 	},
 	screens: {
 		adjustUp: "Adj Up",
 		adjustDown: "Adj Down",
 		up: "Screen Up",
-		down: "Screen Down"
+		down: "Screen Down",
+		preset1: "Preset 1",
+		preset2: "Preset 2",
+	},
+	bluRay: {
+		control: "Blu-Ray Control"
+	},
+	projector: {
+		off: "Power off Projector"
 	}
 }
 socket.on("audioSlider", (sliderValues) => {
@@ -45,27 +53,35 @@ window.onload = function() {
 		[
 			"video",
 			"audio",
-			"screen"
+			"screen",
+			"bluRay",
+			"projector"
 		].forEach((mediaType) => {
-			var device = mediaType;
-			switch (mediaType) {
-				case "audio": case "video": device = "extron"; break;
-				case "screen": device = "screens"; break;
-			}
-			if (tables[device]) {
-				tables[device].forEach((row) => {
-					var rowElement = document.createElement("tr");
-					row.forEach((item) => {
-						var itemElement = document.createElement("td");
-						if (item != "") {
-							itemElement.setAttribute("onclick", device + "('" + mediaType + "'," + item + ")");
-							itemElement.setAttribute("class", "button");
-							itemElement.innerText = names[device][item];
+			var mediaTables = document.getElementsByClassName(mediaType + "Table");
+			if (mediaTables != null) {
+				var device = mediaType;
+				switch (mediaType) {
+					case "audio": case "video": device = "extron"; break;
+					case "screen": device = "screens"; break;
+				}
+				if (tables[device]) {
+					tables[device].forEach((row) => {
+						var rowElement = document.createElement("tr");
+						row.forEach((item) => {
+							var itemElement = document.createElement("td");
+							if (item != "") {
+								itemElement.setAttribute("onclick", device + "('" + mediaType + "'," + item + ")");
+								itemElement.setAttribute("class", "button " + mediaType);
+								itemElement.innerText = names[device][item];
+							}
+							rowElement.appendChild(itemElement);
+						});
+						for (var i=0; i<mediaTables.length; i++){
+							mediaTables.item(i).classList.add("mediaTable");
+							mediaTables.item(i).getElementsByTagName("tbody")[0].appendChild(rowElement);
 						}
-						rowElement.appendChild(itemElement);
 					});
-					document.getElementById(mediaType).getElementsByTagName("tbody")[0].appendChild(rowElement);
-				});
+				}
 			}
 		});
 	}

@@ -5,6 +5,9 @@
 #buttonContainer {
 	height: calc(100% - var(--muteButtonHeight));
 }
+table#buttonContainer>tbody>tr {
+	height: 33%;
+}
 span {
 	display: inline-block;
 	box-sizing: border-box;
@@ -42,20 +45,26 @@ tbody .button:hover {
 .southTable h1 {
 	text-align: left;
 }
-#video, #screen, #audio {
+.mediaTable {
 	height:100%;
 }
-#video tr, #screen tr, #audio tr {
+.mediaTable tr {
 	height: 50%;
 }
-#video .button {
+.video.button {
 	background-color: #442;
 }
-#audio .button {
+.audio.button {
 	background-color: #224;
 }
-#screen .button {
+.screen.button {
 	background-color: #542;
+}
+.projector.button {
+	background-color: #422;
+}
+.bluRay.button {
+	background-color: #244;
 }
 #audioControls {
 	width: 100%;
