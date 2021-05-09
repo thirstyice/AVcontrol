@@ -9,7 +9,7 @@ const blackouts = require("./modules/blackouts");
 const paradigm = require("./modules/paradigm");
 const extron = require("./modules/extron");
 
-var airWallIsDown = 0;
+var airWallIsDown = 1;
 
 const southiPadip = "::ffff:192.168.100.253";
 const northiPadip = "::ffff:192.168.100.254";
@@ -22,16 +22,22 @@ const httpsOptions = {
 
 function iPadRedirect(req, res, next) {
 	if (airWallIsDown == 1) {
-		if (req.ip === northiPadip) {
-			res.redirect("/pages-north");
-		} else if (req.ip === southiPadip) {
-			res.redirect("/pages-south");
-		} else {
-			next();
+		if ( ! ( [ // Define pages exempt from redirect
+			"lighting.html",
+			"system-info.html",
+			"drapes.html"
+		].includes(req.originalUrl.match("^[^?]*")[0].replace("/pages/", "")))) {
+			var originalUrl = req.originalUrl;
+			if (req.ip === northiPadip) {
+				res.redirect( originalUrl.replace("pages", "pages-north"));
+				return;
+			} else if (req.ip === southiPadip) {
+				res.redirect( originalUrl.replace("pages", "pages-south"));
+				return;
+			}
 		}
-	} else {
-		next();
 	}
+	next();
 }
 
 app.use("/pages", iPadRedirect);
