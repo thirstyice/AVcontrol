@@ -42,6 +42,9 @@ var server = https.createServer(httpsOptions, app);
 const io = new Server(server);
 
 io.on('connection', (socket) => {
+	socket.onAny((event, args) => {
+		console.log("Recieved: " + event);
+	});
 	socket.on("set-system-info", () => {
 		var ips = [];
 		for (const [key, value] of io.sockets.sockets) {
@@ -98,6 +101,8 @@ io.on('connection', (socket) => {
 			} else {
 				blackouts.move(drape.id, drape.direction);
 			}
+		} else if (drape.type = "louvres") {
+			// TODO: Handle louvres: open, close, tiltopen, tiltclose
 		}
 	});
 	socket.on("extron", (info) => {
