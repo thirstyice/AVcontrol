@@ -11,7 +11,7 @@ window.onload = function() {
 		["Open", "Close"].forEach((direction) => {
 			var node = document.createElement("td");
 			node.setAttribute("onclick", "clicked('" + heading.id + "','" + direction + "')");
-			node.setAttribute("class", direction);
+			node.setAttribute("class", "button " + direction);
 			node.innerText = direction;
 			document.getElementById(direction).appendChild(node);
 		});
@@ -19,7 +19,7 @@ window.onload = function() {
 			["Tilt Open", "Tilt Close"].forEach((direction) => {
 				var node = document.createElement("td");
 				node.setAttribute("onclick", "clicked('" + heading.id + "','" + direction + "')");
-				node.setAttribute("class", direction);
+				node.setAttribute("class", "button " + direction);
 				node.innerText = direction;
 				document.getElementById(direction.replace(/^.* /, "")).appendChild(node);
 			});

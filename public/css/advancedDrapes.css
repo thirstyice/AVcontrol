@@ -16,6 +16,9 @@ tbody > tr {
 tbody td {
 	width: 100px;
 }
+.button {
+	cursor: pointer;
+}
 tbody td.open {
 	background-color: #242;
 }
