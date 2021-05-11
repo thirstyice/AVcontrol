@@ -9,15 +9,15 @@ td {
 #presets > tr > td {
 	table-layout: fixed;
 }
-#north .button {
+#Studio_North .button {
 	background-color: #553;
 }
-#south .button {
+#Studio_South .button {
 	background-color: #355;
 }
-#combined .button {
+#Global .button {
 	background-color: #242;
 }
-#north .button:hover, #south .button:hover, #combined .button:hover {
+#Studio_North .button:hover, #Studio_South .button:hover, #Global .button:hover {
 	background-color: #111;
 }

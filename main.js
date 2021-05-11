@@ -11,6 +11,14 @@ const extron = require("./modules/extron");
 
 var airWallIsDown = true;
 
+paradigm.addHandler("wall close Wall Aud1 + Aud2, Global", () => {
+	airWallIsDown = false;
+});
+paradigm.addHandler("wall open Wall Aud1 + Aud2, Global", () => {
+	airWallIsDown = true;
+});
+paradigm.send("wall get Wall Aud1 + Aud2");
+
 const southiPadip = "::ffff:192.168.100.253";
 const northiPadip = "::ffff:192.168.100.254";
 
@@ -142,23 +150,37 @@ io.on('connection', (socket) => {
 	socket.on("getLightingPresets", () => {
 		var presets;
 		if (airWallIsDown == false) {
-			presets = { combined: paradigm.getPresets("combined") };
+			presets = { Global: paradigm.getPresets("Global") };
 		} else {
 			if (socket.handshake.address.includes(northiPadip)) {
-				presets = { north: paradigm.getPresets("north") };
+				presets = { Studio_North: paradigm.getPresets("Studio North") };
 			} else if (socket.handshake.address.includes(southiPadip)) {
-				presets = { south: paradigm.getPresets("south") };
+				presets = { Studio_South: paradigm.getPresets("Studio South") };
 			} else {
 				presets = {
-					north: paradigm.getPresets("north"),
-					south: paradigm.getPresets("south")
+					Studio_North: paradigm.getPresets("Studio North"),
+					Studio_South: paradigm.getPresets("Studio South")
 				}
 			}
 		}
 		socket.emit("setLightingPresets", presets);
 	});
+	socket.on("setLightingPreset", (preset, space) => {
+		paradigm.activate(preset, space);
+	});
 	socket.on("lightsOff", () => {
-		// TODO:
+		if (airWallIsDown == true) {
+			space = "Global";
+		} else {
+			if (socket.handshake.address.includes(northiPadip)) {
+				space = "Studio North";
+			} else if (socket.handshake.address.includes(southiPadip)) {
+				space = "Studio South";
+			} else {
+				space = "Global";
+			}
+		}
+		paradigm.deactivate("", space);
 	});
 });
 
