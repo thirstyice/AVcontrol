@@ -9,7 +9,7 @@ const blackouts = require("./modules/blackouts");
 const paradigm = require("./modules/paradigm");
 const extron = require("./modules/extron");
 
-var airWallIsDown = 1;
+var airWallIsDown = true;
 
 const southiPadip = "::ffff:192.168.100.253";
 const northiPadip = "::ffff:192.168.100.254";
@@ -21,7 +21,7 @@ const httpsOptions = {
 };
 
 function iPadRedirect(req, res, next) {
-	if (airWallIsDown == 1) {
+	if (airWallIsDown == true) {
 		if ( ! ( [ // Define pages exempt from redirect
 			"lighting.html",
 			"system-info.html",
@@ -60,7 +60,8 @@ io.on('connection', (socket) => {
 		}
 		var info = {
 			version:require("./package.json").version,
-			clients: ips.length
+			clients: ips.length,
+			airwall_status: airWallIsDown ? "Down" : "Up"
 		}
 
 		io.emit("set-system-info", info);
@@ -69,20 +70,20 @@ io.on('connection', (socket) => {
 	socket.on("moveDrape", (drape) => {
 		if (drape.type == "velour") {
 			if (drape.id == "walls") {
-				if (socket.handshake.address != southiPadip || airWallIsDown == 0) {
+				if (socket.handshake.address != southiPadip || airWallIsDown == false) {
 					velour[drape.direction](1);
 					velour[drape.direction](2);
 				}
-				if (socket.handshake.address != northiPadip || airWallIsDown == 0) {
+				if (socket.handshake.address != northiPadip || airWallIsDown == false) {
 					velour[drape.direction](3);
 					velour[drape.direction](4);
 				}
 			} else if (drape.id == "windows") {
-				if (socket.handshake.address != southiPadip || airWallIsDown == 0) {
+				if (socket.handshake.address != southiPadip || airWallIsDown == false) {
 					velour[drape.direction](9);
 					velour[drape.direction](10);
 				}
-				if (socket.handshake.address != northiPadip || airWallIsDown == 0) {
+				if (socket.handshake.address != northiPadip || airWallIsDown == false) {
 					velour[drape.direction](5);
 					velour[drape.direction](6);
 					velour[drape.direction](7);
@@ -93,13 +94,13 @@ io.on('connection', (socket) => {
 			}
 		} else if (drape.type == "blackouts") {
 			if (drape.id == "viewing") {
-				if (socket.handshake.address != northiPadip || airWallIsDown == 0) {
+				if (socket.handshake.address != northiPadip || airWallIsDown == false) {
 					blackouts.move(0, drape.direction);
 				}
 			} else if (drape.id == "windows") {
-				if (socket.handshake.address == southiPadip && airWallIsDown == 1) {
+				if (socket.handshake.address == southiPadip && airWallIsDown == true) {
 					blackouts.move("south", drape.direction);
-				} else if (socket.handshake.address == northiPadip && airWallIsDown == 1) {
+				} else if (socket.handshake.address == northiPadip && airWallIsDown == true) {
 					blackouts.move("north", drape.direction);
 				} else {
 					blackouts.move("all", drape.direction);
@@ -121,7 +122,7 @@ io.on('connection', (socket) => {
 		var path = new URL(socket.request.headers.referer).pathname
 		path = path.substr(0, path.lastIndexOf("/"));
 		var sliderId = ""
-		if (airWallIsDown == 0) {
+		if (airWallIsDown == false) {
 			if (path == "/pages") {
 				sliderId = "combined";
 			}
@@ -140,7 +141,7 @@ io.on('connection', (socket) => {
 
 	socket.on("getLightingPresets", () => {
 		var presets;
-		if (airWallIsDown == 0) {
+		if (airWallIsDown == false) {
 			presets = { combined: paradigm.getPresets("combined") };
 		} else {
 			if (socket.handshake.address.includes(northiPadip)) {
@@ -156,7 +157,9 @@ io.on('connection', (socket) => {
 		}
 		socket.emit("setLightingPresets", presets);
 	});
-
+	socket.on("lightsOff", () => {
+		// TODO:
+	});
 });
 
 // Redirect http to https

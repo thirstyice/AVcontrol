@@ -5,6 +5,7 @@
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<link rel="stylesheet" href="/css/main.css">
 		<link rel="stylesheet" href="/css/index.css">
+		<script src="/socket.io/socket.io.js"></script>
 		<script src="/js/index.js" charset="utf-8"></script>
 		<title>AVcontrol</title>
 	</head>
@@ -12,8 +13,9 @@
 		<ul id="menu">
 			<li><a href="?page=drapes">Drapery</a></li>
 			<li><a href="?page=av">Audio/Video</a></li>
-			<li><a href="?page=lighting">Lighting</a></li>
+			<!-- <li><a href="?page=lighting">Lighting</a></li> -->
 			<li><a href="?page=system-info">System Info</a></li>
+			<li><a onclick="">Lights Off</a></li>
 		</ul>
 		<div id="iframe-container">
 			<iframe src=""></iframe>

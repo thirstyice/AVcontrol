@@ -14,9 +14,18 @@ html {
 	width: var(--menu-width);
 	display:inline-block;
 	float: left;
+	position: relative;
+	height: 100%;
 }
 #menu>li {
 	text-align: right;
+}
+#menu>li:last-child {
+	position: absolute;
+	bottom: 20px;
+	width: 100%;
+	background-color: #422;
+	cursor: pointer;
 }
 #menu>li:hover, #menu>li.active {
 	background-color: #111;
@@ -31,6 +40,7 @@ html {
 	width: 100%;
 	text-decoration: none;
 }
+
 #iframe-container {
 	height: 100%;
 	display: inline-block;

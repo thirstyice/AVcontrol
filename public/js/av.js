@@ -1,11 +1,11 @@
 const socket = io();
 var names = {
 	extron: {
-		1: "North 1",
-		2:	"North 2",
-		3: "South 1",
-		4: "South 2",
-		5: "Wall Box",
+		1: "Wall Box",
+		2:	"South 1",
+		3: "South 2",
+		4: "North 1",
+		5: "North 2",
 		6: "Booth",
 		7: "Blu-Ray"
 	},
@@ -14,14 +14,14 @@ var names = {
 		adjustDown: "Adj Down",
 		up: "Screen Up",
 		down: "Screen Down",
-		preset1: "Preset 1",
-		preset2: "Preset 2",
 	},
 	bluRay: {
 		control: "Blu-Ray Control"
 	},
 	projector: {
-		off: "Power off Projector"
+		off: "Power off Projector",
+		preset1: "Presentation High",
+		preset2: "Presentation Low"
 	}
 }
 socket.on("audioSlider", (sliderValues) => {
@@ -71,7 +71,7 @@ window.onload = function() {
 							var itemElement = document.createElement("td");
 							if (item != "") {
 								itemElement.setAttribute("onclick", device + "('" + mediaType + "'," + item + ")");
-								itemElement.setAttribute("class", "button " + mediaType);
+								itemElement.setAttribute("class", "button " + mediaType + " " + item);
 								itemElement.innerText = names[device][item];
 							}
 							rowElement.appendChild(itemElement);

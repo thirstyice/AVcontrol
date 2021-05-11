@@ -1,3 +1,4 @@
+const socket = io();
 window.onload = function () {
 	var url = new URL(window.location)
 	var id;
@@ -19,4 +20,7 @@ window.onload = function () {
 			menuItems.item(i).classList.remove("active");
 		}
 	}
+}
+function lightsOff() {
+	socket.emit("lightsOff")
 }

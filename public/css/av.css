@@ -61,6 +61,9 @@ tbody .button:hover {
 	background-color: #542;
 }
 .projector.button {
+	background-color: #444;
+}
+.projector.off.button {
 	background-color: #422;
 }
 .bluRay.button {
