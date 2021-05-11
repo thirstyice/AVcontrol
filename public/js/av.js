@@ -29,26 +29,44 @@ socket.on("audioSlider", (sliderValues) => {
 		document.getElementById("audioControls").outerHTML = "";
 		document.getElementById("buttonContainer").style.height = "100%";
 		return;
+	} else if (typeof sliderValues.id != "undefined") {
+		var slider = document.createElement("input");
+		slider.setAttribute("type", "range");
+		slider.setAttribute("min", "0");
+		slider.setAttribute("max", "64");
+		slider.id = "audioSlider";
+		slider.setAttribute("onchange", "audioSliderDidChange(this.value)");
+
+		var muteButton = document.createElement("button");
+		muteButton.setAttribute("onclick", "socket.emit('toggleMute')");
+		muteButton.id = "muteButton";
+		muteButton.innerText = "Mute";
+
+		document.getElementById("sliderContainer").appendChild(slider);
+		document.getElementById("muteButtonContainer").appendChild(muteButton);
 	}
-	var slider = document.createElement("input");
-	slider.setAttribute("type", "range");
-	slider.setAttribute("min", "1");
-	slider.setAttribute("max", "100");
-	slider.setAttribute("value", sliderValues.value);
-	//todo: onchange
-
-	var muteButton = document.createElement("button");
-	muteButton.innerText = "Mute";
-	// TODO: Set mute status
-	// TODO: Set onclick
-
-
-	document.getElementById("sliderContainer").appendChild(slider);
-	document.getElementById("muteButtonContainer").appendChild(muteButton);
-
+	if (typeof sliderValues.level != "undefined") {
+		var slider = document.getElementById("audioSlider")
+		if (slider !=null) {
+			slider.setAttribute("value", sliderValues.level);
+			document.getElementById("sliderContainer").style.display = "none";
+			document.getElementById("sliderContainer").style.display = "table-cell";
+		}
+	}
+	if (typeof sliderValues.muted != "undefined") {
+		var muteButton = document.getElementById("muteButton")
+		if (muteButton !=null) {
+			muteButton.setAttribute("class", sliderValues.muted ? "muted" : "");
+			muteButton.innerText = sliderValues.muted ? "Muted" : "Mute";
+			var slider = document.getElementById("audioSlider")
+			if (slider !=null) {
+				slider.setAttribute("class", sliderValues.muted ? "disabled" : "");
+			}
+		}
+	}
 });
 window.onload = function() {
-	socket.emit("getAudioSlider");
+	socket.emit("getAudioSliderValues");
 	if ( typeof tables !== 'undefined' ) {
 		[
 			"video",
@@ -86,6 +104,10 @@ window.onload = function() {
 		});
 	}
 }
+function audioSliderDidChange(value) {
+	console.log("Slider: ", value);
+	socket.emit("setAudioLevel", value);
+}
 function extron(mediaType, id) {
 	var info = {
 		media: mediaType.toString(),
@@ -94,5 +116,8 @@ function extron(mediaType, id) {
 	socket.emit("extron", info);
 }
 function screens() {
-
+	// TODO:
+}
+function projector() {
+	// TODO: 
 }

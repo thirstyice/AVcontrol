@@ -9,7 +9,8 @@ const blackouts = require("./modules/blackouts");
 const paradigm = require("./modules/paradigm");
 const extron = require("./modules/extron");
 
-var airWallIsDown = true;
+var airWallIsDown = false;
+var audioIsMuted = false;
 
 paradigm.addHandler("wall close Wall Aud1 + Aud2, Global", () => {
 	airWallIsDown = false;
@@ -18,6 +19,14 @@ paradigm.addHandler("wall open Wall Aud1 + Aud2, Global", () => {
 	airWallIsDown = true;
 });
 paradigm.send("wall get Wall Aud1 + Aud2");
+
+extron.addHandler(/Amt05\*/, (data) => {
+	audioIsMuted = !!data.replace(/Amt05\*/,"").parseInt();
+	io.emit("audioSlider", {muted: audioIsMuted});
+});
+extron.addHandler(/Out05 Vol/, (data) => {
+	io.emit("audioSlider", {level:data.replace(/Out05 Vol\*/,"").parseInt()});
+})
 
 const southiPadip = "::ffff:192.168.100.253";
 const northiPadip = "::ffff:192.168.100.254";
@@ -126,7 +135,15 @@ io.on('connection', (socket) => {
 	socket.on("screens", (command) => {
 		// TODO:
 	});
-	socket.on("getAudioSlider", () => {
+	socket.on("getAudioSliderValues", () => {
+		extron.requestAudioLevel(5, (audioLevel) => {
+			io.emit("audioSlider", {level:audioLevel})
+			console.log("Set audio slider level:" + audioLevel);
+		});
+		extron.requestIsMuted(5, (muted) => {
+			io.emit("audioSlider", {muted:!!muted});
+			audioIsMuted = !!muted;
+		})
 		var path = new URL(socket.request.headers.referer).pathname
 		path = path.substr(0, path.lastIndexOf("/"));
 		var sliderId = ""
@@ -140,12 +157,21 @@ io.on('connection', (socket) => {
 				case "/pages-north": sliderId = "north"; break;
 			}
 		}
-		var audioLevel = 50; // TODO: get the real level
-		var muteStatus = false;
-		socket.emit("audioSlider", { id:sliderId, level:audioLevel, muteStatus: muteStatus });
+		socket.emit("audioSlider", { id:sliderId });
 	});
-
-	// TODO: Deal with audioSlider and muteButton changes
+	socket.on("toggleMute", () => {
+		audioIsMuted = !audioIsMuted;
+		if (audioIsMuted) {
+			extron.muteAudio(5);
+		} else {
+			extron.unmuteAudio(5);
+		}
+		io.emit("audioSlider", {muted:audioIsMuted});
+	})
+	socket.on("setAudioLevel", (level) => {
+		extron.setAudioLevel(5, level);
+		io.emit("audioSlider", {level: level});
+	});
 
 	socket.on("getLightingPresets", () => {
 		var presets;

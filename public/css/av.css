@@ -63,7 +63,7 @@ tbody .button:hover {
 .projector.button {
 	background-color: #444;
 }
-.projector.off.button {
+.projector.off {
 	background-color: #422;
 }
 .bluRay.button {
@@ -73,7 +73,6 @@ tbody .button:hover {
 	width: 100%;
 	height: var(--muteButtonHeight);
 }
-
 #sliderContainer {
 	width: calc(100% - 25px);
 }
@@ -85,7 +84,7 @@ tbody .button:hover {
 	outline: none;
 
 }
-#sliderContainer>input::-webkit-slider-thumb {
+#audioSlider::-webkit-slider-thumb {
 	-webkit-appearance: none;
 	appearance: none;
 	width: 25px;
@@ -94,7 +93,7 @@ tbody .button:hover {
 	cursor: pointer;
 }
 
-#sliderContainer>input::-moz-range-thumb {
+#audioSlider::-moz-range-thumb {
   -webkit-appearance: none;
   appearance: none;
   width: 25px;
@@ -107,8 +106,19 @@ tbody .button:hover {
 	width: var(--muteButtonWidth);
 	height: var(--muteButtonHeight);
 }
-#muteButtonContainer button {
+#muteButton {
+	border: none;
+	color: #fff;
 	box-sizing: border-box;
+	padding: 0px 20px;
 	width: 100%;
 	height: 100%;
+	background-color: #555;
+	margin-bottom: 8px;
+}
+#muteButton.muted {
+	background-color: #422;
+}
+#muteButton:hover {
+	background-color: #000;
 }
