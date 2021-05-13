@@ -57,9 +57,9 @@ function makeTableBody(array, action) {
 	if (array==null) {
 		return tbody;
 	}
-	for (row of array) {
+	for (var row of array) {
 		var tr = tbody.appendChild(document.createElement("tr"));
-		for (cell of row) {
+		for (var cell of row) {
 			var td = tr.appendChild(document.createElement("td"));
 			if ( cell != "") {
 				td.innerText = cell;

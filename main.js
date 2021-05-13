@@ -9,6 +9,7 @@ const velour = require("./modules/velour.js");
 const blackouts = require("./modules/blackouts");
 const paradigm = require("./modules/paradigm");
 const extron = require("./modules/extron");
+const screens = require("./modules/screens");
 
 var airWallIsDown = true;
 var audioIsMuted = false;
@@ -155,9 +156,9 @@ io.on('connection', (socket) => {
 	socket.on("screen", (command) => {
 		var controlSpace = getControlSpace(socket.handshake.address);
 		if (controlSpace == "combined") {
-			screens[configuration.patch[command]]();
+			screens[configuration.screens.patch[command]]();
 		} else {
-			screens[configuration.patch[
+			screens[configuration.screens.patch[
 				controlSpace.replace(/^\w/, (c) => c.toUpperCase()) + " " + command
 			]]();
 		}
