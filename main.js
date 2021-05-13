@@ -4,12 +4,13 @@ const express = require("express");
 const app = express();
 const port = 7077;
 const { Server } = require("socket.io");
+const configuration = require("./modules/configuration");
 const velour = require("./modules/velour.js");
 const blackouts = require("./modules/blackouts");
 const paradigm = require("./modules/paradigm");
 const extron = require("./modules/extron");
 
-var airWallIsDown = false;
+var airWallIsDown = true;
 var audioIsMuted = false;
 
 paradigm.addHandler("wall close Wall Aud1 + Aud2, Global", () => {
@@ -36,13 +37,23 @@ const httpsOptions = {
 	key: fs.readFileSync('key.pem'),
 	cert: fs.readFileSync('cert.pem')
 };
-
+function getControlSpace(requestIp) {
+	if (airWallIsDown==true) {
+		if (requestIp.includes(northiPadip)) {
+			return "north";
+		} else if (requestIp.includes(southiPadip)) {
+			return "south";
+		}
+	}
+	return "combined";
+}
 function iPadRedirect(req, res, next) {
 	if (airWallIsDown == true) {
 		if ( ! ( [ // Define pages exempt from redirect
 			"lighting.html",
 			"system-info.html",
-			"drapes.html"
+			"drapes.html",
+			"av.html"
 		].includes(req.originalUrl.match("^[^?]*")[0].replace("/pages/", "")))) {
 			var originalUrl = req.originalUrl;
 			if (req.ip === northiPadip) {
@@ -66,7 +77,7 @@ const io = new Server(server);
 
 io.on('connection', (socket) => {
 	socket.onAny((event, args) => {
-		console.log("Recieved: " + event);
+		console.log("Recieved: " + event + " from: " + socket.handshake.address);
 	});
 	socket.on("set-system-info", () => {
 		var ips = [];
@@ -129,35 +140,40 @@ io.on('connection', (socket) => {
 			// TODO: Handle louvres: open, close, tiltopen, tiltclose
 		}
 	});
-	socket.on("extron", (info) => {
-		extron.setPath(info.input, "all", info.media);
+	socket.on("getExtronConfiguration", (callback) => {
+		callback(configuration.extron.table.inputs[getControlSpace(socket.handshake.address)]);
+	})
+	socket.on("getScreenConfiguration", (callback) => {
+		callback(configuration.screens.table[getControlSpace(socket.handshake.address)]);
 	});
-	socket.on("screens", (command) => {
-		// TODO:
+	socket.on("getProjectorConfiguration", (callback) => {
+		callback(configuration.projector.table[getControlSpace(socket.handshake.address)]);
+	});
+	socket.on("extron", (info) => {
+		extron.setPath(configuration.extron.patch.inputs[info.input], "all", info.media);
+	});
+	socket.on("screen", (command) => {
+		var controlSpace = getControlSpace(socket.handshake.address);
+		if (controlSpace == "combined") {
+			screens[configuration.patch[command]]();
+		} else {
+			screens[configuration.patch[
+				controlSpace.replace(/^\w/, (c) => c.toUpperCase()) + " " + command
+			]]();
+		}
 	});
 	socket.on("getAudioSliderValues", () => {
+		if (getControlSpace(socket.handshake.address) == "south") {
+			return;
+		}
+		socket.emit("audioSlider");
 		extron.requestAudioLevel(5, (audioLevel) => {
 			io.emit("audioSlider", {level:audioLevel})
-			console.log("Set audio slider level:" + audioLevel);
 		});
 		extron.requestIsMuted(5, (muted) => {
 			io.emit("audioSlider", {muted:!!muted});
 			audioIsMuted = !!muted;
 		})
-		var path = new URL(socket.request.headers.referer).pathname
-		path = path.substr(0, path.lastIndexOf("/"));
-		var sliderId = ""
-		if (airWallIsDown == false) {
-			if (path == "/pages") {
-				sliderId = "combined";
-			}
-		} else {
-			switch (path) {
-				case "/pages-south": sliderId = "south"; break;
-				case "/pages-north": sliderId = "north"; break;
-			}
-		}
-		socket.emit("audioSlider", { id:sliderId });
 	});
 	socket.on("toggleMute", () => {
 		audioIsMuted = !audioIsMuted;

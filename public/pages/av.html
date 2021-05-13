@@ -4,24 +4,72 @@
 		<link rel="stylesheet" href="/css/main.css">
 		<link rel="stylesheet" href="/css/av.css">
 		<script src="/socket.io/socket.io.js"></script>
+		<script type="text/javascript">
+		var tables = {
+			extron: [
+				["6","5","","1"],
+				["7","4","3","2"]
+			],
+			screens: [
+				["adjustUp","up"],
+				["adjustDown","down"]
+			],
+			projector: [
+				["bluRay", "presetHigh", "on"],
+				["presetNorth", "presetLow", "off"]
+			]
+		}
+		</script>
 		<script src="/js/av.js" charset="utf-8"></script>
 		<meta charset="utf-8">
 		<title></title>
 	</head>
 	<body>
-		<div id="buttonContainer">
-			<span><iframe src="/pages-north/av.html"></iframe></span>
-			<span><iframe src="/pages-south/av.html"></iframe></span>
-		</div>
-		<div>
-			<table id="audioControls">
-				<tbody>
-					<tr>
-						<td id="sliderContainer"></td>
-						<td id="muteButtonContainer"></td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
+		<table>
+			<tbody>
+				<tr>
+					<td>
+						<table id="buttonContainer">
+							<tbody>
+								<tr>
+									<th>Audio source</th>
+									<th>Video source</th>
+								</tr>
+								<tr>
+									<td>
+										<table class="audioTable">
+
+										</table>
+									</td>
+									<td>
+										<table class="videoTable">
+
+										</table>
+									</td>
+								</tr>
+								<tr>
+									<th>Projector</th>
+									<th>Screen</th>
+								</tr>
+								<tr>
+									<td>
+										<table class="projectorTable">
+
+										</table>
+									</td>
+									<td>
+										<table class="screenTable">
+
+										</table>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+				<tr id="audioControls">
+				</tr>
+			</tbody>
+		</table>
 	</body>
 </html>

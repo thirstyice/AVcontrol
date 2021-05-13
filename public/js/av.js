@@ -1,123 +1,108 @@
 const socket = io();
-var names = {
-	extron: {
-		1: "Wall Box",
-		2:	"South 1",
-		3: "South 2",
-		4: "North 1",
-		5: "North 2",
-		6: "Booth",
-		7: "Blu-Ray"
-	},
-	screens: {
-		adjustUp: "Adj Up",
-		adjustDown: "Adj Down",
-		up: "Screen Up",
-		down: "Screen Down",
-	},
-	bluRay: {
-		control: "Blu-Ray Control"
-	},
-	projector: {
-		off: "Power off Projector",
-		preset1: "Presentation High",
-		preset2: "Presentation Low"
-	}
-}
+
 socket.on("audioSlider", (sliderValues) => {
-	if (sliderValues.id == "") {
-		document.getElementById("audioControls").outerHTML = "";
-		document.getElementById("buttonContainer").style.height = "100%";
-		return;
-	} else if (typeof sliderValues.id != "undefined") {
-		var slider = document.createElement("input");
+	console.log(sliderValues);
+	if (!sliderValues) {
+		var tr = document.getElementById("audioControls").
+			appendChild(document.createElement("td")).
+			appendChild(document.createElement("table")).
+			appendChild(document.createElement("table")).
+			appendChild(document.createElement("tbody")).
+			appendChild(document.createElement("tr"));
+
+		var slider = tr.
+			appendChild(document.createElement("td")).
+			appendChild(document.createElement("input"));
+			slider.parentElement.id = "sliderContainer";
 		slider.setAttribute("type", "range");
 		slider.setAttribute("min", "0");
 		slider.setAttribute("max", "64");
 		slider.id = "audioSlider";
-		slider.setAttribute("onchange", "audioSliderDidChange(this.value)");
+		slider.setAttribute("onchange", "socket.emit('setAudioLevel', this.value)");
 
-		var muteButton = document.createElement("button");
+		var muteButton = tr.
+			appendChild(document.createElement("td")).
+			appendChild(document.createElement("button"));
 		muteButton.setAttribute("onclick", "socket.emit('toggleMute')");
 		muteButton.id = "muteButton";
 		muteButton.innerText = "Mute";
 
-		document.getElementById("sliderContainer").appendChild(slider);
-		document.getElementById("muteButtonContainer").appendChild(muteButton);
-	}
-	if (typeof sliderValues.level != "undefined") {
-		var slider = document.getElementById("audioSlider")
-		if (slider !=null) {
-			slider.setAttribute("value", sliderValues.level);
-			document.getElementById("sliderContainer").style.display = "none";
-			document.getElementById("sliderContainer").style.display = "table-cell";
-		}
-	}
-	if (typeof sliderValues.muted != "undefined") {
-		var muteButton = document.getElementById("muteButton")
-		if (muteButton !=null) {
-			muteButton.setAttribute("class", sliderValues.muted ? "muted" : "");
-			muteButton.innerText = sliderValues.muted ? "Muted" : "Mute";
+		document.getElementById("audioControls").style.height = "70px";
+	} else {
+		if (typeof sliderValues.level != "undefined") {
 			var slider = document.getElementById("audioSlider")
 			if (slider !=null) {
-				slider.setAttribute("class", sliderValues.muted ? "disabled" : "");
+				slider.setAttribute("value", sliderValues.level);
+				// Dumb hack to get the updated value to draw by forcing redraw of slider
+				document.getElementById("sliderContainer").style.display = "none";
+				document.getElementById("sliderContainer").style.display = "table-cell";
+			}
+		}
+		if (typeof sliderValues.muted != "undefined") {
+			var muteButton = document.getElementById("muteButton")
+			if (muteButton !=null) {
+				muteButton.setAttribute("class", sliderValues.muted ? "muted" : "");
+				muteButton.innerText = sliderValues.muted ? "Muted" : "Mute";
+				var slider = document.getElementById("audioSlider")
+				if (slider !=null) {
+					slider.setAttribute("class", sliderValues.muted ? "disabled" : "");
+				}
 			}
 		}
 	}
 });
+
+function makeTableBody(array, action) {
+	var tbody = document.createElement("tbody");
+	if (array==null) {
+		return tbody;
+	}
+	for (row of array) {
+		var tr = tbody.appendChild(document.createElement("tr"));
+		for (cell of row) {
+			var td = tr.appendChild(document.createElement("td"));
+			if ( cell != "") {
+				td.innerText = cell;
+				td.setAttribute("onclick", action + "(this.innerText)");
+				td.setAttribute("class", "button " + cell.replace(/[ -]/g, ""));
+			}
+		}
+	}
+	return tbody;
+}
+
 window.onload = function() {
 	socket.emit("getAudioSliderValues");
-	if ( typeof tables !== 'undefined' ) {
-		[
-			"video",
-			"audio",
-			"screen",
-			"bluRay",
-			"projector"
-		].forEach((mediaType) => {
-			var mediaTables = document.getElementsByClassName(mediaType + "Table");
-			if (mediaTables != null) {
-				var device = mediaType;
-				switch (mediaType) {
-					case "audio": case "video": device = "extron"; break;
-					case "screen": device = "screens"; break;
-				}
-				if (tables[device]) {
-					tables[device].forEach((row) => {
-						var rowElement = document.createElement("tr");
-						row.forEach((item) => {
-							var itemElement = document.createElement("td");
-							if (item != "") {
-								itemElement.setAttribute("onclick", device + "('" + mediaType + "'," + item + ")");
-								itemElement.setAttribute("class", "button " + mediaType + " " + item);
-								itemElement.innerText = names[device][item];
-							}
-							rowElement.appendChild(itemElement);
-						});
-						for (var i=0; i<mediaTables.length; i++){
-							mediaTables.item(i).classList.add("mediaTable");
-							mediaTables.item(i).getElementsByTagName("tbody")[0].appendChild(rowElement);
-						}
-					});
-				}
+	socket.emit("getExtronConfiguration", (config) => {
+		["video","audio"].forEach((mediaType) => {
+			var tbody = makeTableBody(config, mediaType);
+			for (table of document.getElementsByClassName(mediaType + "Table")) {
+				table.appendChild(tbody);
 			}
-		});
-	}
+		})
+	})
+	socket.emit("getScreenConfiguration", (config) => {
+		var tbody = makeTableBody(config, "screen");
+		for (table of document.getElementsByClassName("screenTable")) {
+			table.appendChild(tbody);
+		}
+	})
+	socket.emit("getProjectorConfiguration", (config) => {
+		var tbody = makeTableBody(config, "projector");
+		for (table of document.getElementsByClassName("projectorTable")) {
+			table.appendChild(tbody);
+		}
+	})
 }
-function audioSliderDidChange(value) {
-	console.log("Slider: ", value);
-	socket.emit("setAudioLevel", value);
+function audio(source) {
+	socket.emit("extron", {media:"audio", input: source});
 }
-function extron(mediaType, id) {
-	var info = {
-		media: mediaType.toString(),
-		input: id
-	}
-	socket.emit("extron", info);
+function video(source) {
+	socket.emit("extron", {media:"video", input: source});
 }
-function screens() {
-	// TODO:
+function screen(action) {
+	socket.emit("screen", action);
 }
 function projector() {
-	// TODO: 
+	// TODO:
 }

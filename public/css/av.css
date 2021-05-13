@@ -1,27 +1,7 @@
-:root {
-	--muteButtonHeight: 50px;
-	--muteButtonWidth: 20px;
-}
 #buttonContainer {
-	height: calc(100% - var(--muteButtonHeight));
-}
-table#buttonContainer>tbody>tr {
-	height: 33%;
-}
-span {
-	display: inline-block;
-	box-sizing: border-box;
-	width: 50%;
 	height: 100%;
 }
-span:first-child {
-	float:left;
-}
-iframe {
-	width: 100%;
-	height: 100%;
-	border: 0;
-}
+
 table {
 	width:100%;
 	text-align: center;
@@ -33,51 +13,51 @@ tbody {
 tbody td {
 	width: 100px;
 }
-tbody .button:hover {
-	background-color: #000;
+tbody > tr > th {
+	height:1px;
+	padding-top: 7px;
+	padding-bottom: 5px;
+	font-size: 18px;
 }
-.northTable>tbody>tr>td:first-child, .southTable>tbody>tr>td:last-child {
-	width: 1%;
+.button {
+	box-sizing: border-box;
+	padding: 5px;
+	height: 57px;
 }
-.northTable h1 {
-	text-align: right;
-}
-.southTable h1 {
-	text-align: left;
-}
-.mediaTable {
-	height:100%;
-}
-.mediaTable tr {
-	height: 50%;
-}
-.video.button {
+.videoTable .button {
 	background-color: #442;
 }
-.audio.button {
+.audioTable .button {
 	background-color: #224;
 }
-.screen.button {
+.screenTable .button {
 	background-color: #542;
 }
-.projector.button {
+.projectorTable .button {
 	background-color: #444;
 }
-.projector.off {
+.projectorTable .Off  {
 	background-color: #422;
 }
-.bluRay.button {
+.projectorTable .On {
+	background-color: #242;
+}
+.BluRayControl.button{
 	background-color: #244;
 }
+.button:hover {
+	background-color: #000;
+}
 #audioControls {
+	height: 0;
+	table-layout: fixed;
+}
+#audioControls td {
+	height: 60px;
 	width: 100%;
-	height: var(--muteButtonHeight);
 }
-#sliderContainer {
-	width: calc(100% - 25px);
-}
-#sliderContainer>input {
-	width: 90%;
+#audioSlider {
+	width: 95%;
 	appearance: none;
 	-webkit-appearance: none;
 	background: #444;
@@ -101,20 +81,15 @@ tbody .button:hover {
   background: #66C;
   cursor: pointer;
 }
-#muteButtonContainer {
-	box-sizing: border-box;
-	width: var(--muteButtonWidth);
-	height: var(--muteButtonHeight);
-}
 #muteButton {
 	border: none;
 	color: #fff;
 	box-sizing: border-box;
-	padding: 0px 20px;
-	width: 100%;
+	padding: 5px 10px;
+	width: 75px;
 	height: 100%;
 	background-color: #555;
-	margin-bottom: 8px;
+	font-size: 16px;
 }
 #muteButton.muted {
 	background-color: #422;
