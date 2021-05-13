@@ -1,7 +1,9 @@
 const SerialPort = require("serialport");
-const path = ""
-//const serialport = new SerialPort(path, {baudRate: 9600, dataBits: 8, stopBits: 1, parity: 'none'});
-
+const path = "/dev/null"
+const port = new SerialPort(path, {baudRate: 9600, dataBits: 8, stopBits: 1, parity: 'none'});
+port.on('error', (err) => {
+	console.error("Blackouts: " + err);
+});
 
 // #DEVICE,T105 View Window,1,18 -> open viewing window
 // #DEVICE, T105 Event   1,1,19 -> close SE
@@ -52,6 +54,6 @@ exports.move = function (id, direction) {
 		id = decodeID(id);
 		sendString = "#DEVICE," + id + ",1," + directionCode;
 	}
-	//serialport.write(sendString);
+	port.write(sendString);
 	console.info("Blackout: sending: " + sendString);
 }

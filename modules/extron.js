@@ -2,6 +2,9 @@ const SerialPort = require("serialport");
 const Readline = require('@serialport/parser-readline');
 const serialPath = "/dev/null"
 const serialport = new SerialPort(serialPath, {baudRate: 9600, dataBits: 8, stopBits: 1, parity: 'none'});
+serialport.on('error', (err) => {
+	console.error("Extron: " + err);
+});
 const parser = serialport.pipe(new Readline({ delimiter: '\r' }))
 
 var messageHandlers = [[],[]];
