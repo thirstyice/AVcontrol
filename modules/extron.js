@@ -6,7 +6,7 @@ const parser = serialport.pipe(new Readline({ delimiter: '\r' }))
 
 var messageHandlers = [[],[]];
 function send(sendString) {
-	console.log('Extron write: ' + sendString);
+	console.info('Extron write: ' + sendString);
 	serialport.write(sendString + "\r\n");
 }
 
@@ -14,13 +14,13 @@ exports.setPath = function (input, output = "all", mediaType = "") {
 	var outString = "";
 	input=input.toString();
 	if (isNaN(input)) {
-		throw new Error("Invalid input: " + input);
+		console.error("Extron: Invalid input: " + input);
 	}
 	outString = input.padStart(2,"0") + "*";
 	output = output.toString();
 	if (output != "all") {
 		if (isNaN(output)) {
-			throw new Error("Invalid output: " + output);
+			console.error("Extron: Invalid output: " + output);
 		}
 		outString = outString + output.padStart(2,"0");
 	}
@@ -29,7 +29,7 @@ exports.setPath = function (input, output = "all", mediaType = "") {
 		case "audio": mediaSymbol = "$"; break;
 		case "video": mediaSymbol = "%"; break;
 		case "all": case "": mediaSymbol = "!"; break;
-		default: throw new Error ("Unknown media type: " + mediaType);
+		default: console.error("Extron: Unknown media type: " + mediaType);
 	}
 	outString = outString + mediaSymbol;
 	send(outString);
@@ -83,7 +83,7 @@ exports.removeHandler = removeHandler;
 // serialport.on('data', console.log)
 parser.on('data', function (data) {
 	// var data = port.read()
-	console.log('Extron data:', data);
+	console.info('Extron data:', data);
 	if (data.match(/^E/)) {
 		var errorName;
 		switch (data) {

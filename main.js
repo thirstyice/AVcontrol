@@ -1,3 +1,4 @@
+const logger = require("./modules/logger")
 const https = require("https");
 const fs = require("fs");
 const express = require("express");
@@ -57,7 +58,7 @@ const io = new Server(server);
 
 io.on('connection', (socket) => {
 	socket.onAny((event, args) => {
-		console.log("Recieved: " + event + " from: " + socket.handshake.address);
+		logger.info("Recieved: " + event + " from: " + socket.handshake.address);
 	});
 	socket.on("set-system-info", () => {
 		var ips = [];
@@ -104,7 +105,7 @@ io.on('connection', (socket) => {
 					case "blackouts":
 						blackouts.move(patch[key], drape.direction.toLowerCase());
 					break;
-					default: console.error("Unknown Drape Type: " + drape.type);
+					default: logger.error("Unknown Drape Type: " + drape.type);
 				}
 			}
 		}
@@ -197,5 +198,5 @@ http.listen(8080);
 
 // And serve the server
 server.listen(port, () => {
-	console.log(`Server listening on port ${port}`);
+	logger.info(`Server listening on port ${port}`);
 });

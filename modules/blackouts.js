@@ -53,5 +53,5 @@ exports.move = function (id, direction) {
 		sendString = "#DEVICE," + id + ",1," + directionCode;
 	}
 	//serialport.write(sendString);
-	console.log("Blackout: sending: " + sendString);
+	console.info("Blackout: sending: " + sendString);
 }

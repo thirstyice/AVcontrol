@@ -6,7 +6,7 @@ const serialport = new SerialPort(serialPath, {baudRate: 9600, dataBits: 8, stop
 var messageHandlers = [[],[]];
 
 function send(sendString) {
-	console.log("Paradigm: sending: " + sendString);
+	console.info("Paradigm: sending: " + sendString);
 	serialport.write(sendString + "\n");
 }
 exports.send = send;
@@ -41,7 +41,7 @@ exports.removeHandler = removeHandler;
 const parser = serialport.pipe(new Readline({ delimiter: '\r' }))
 parser.on('data', function (data) {
 	// var data = port.read()
-  console.log('Paradigm data:', data);
+  console.info('Paradigm data:', data);
 	if (data.match(/^error/)) {
 		console.error("Paradigm: " + data);
 	}
