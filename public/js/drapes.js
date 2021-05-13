@@ -36,19 +36,19 @@ function clicked(heading, direction) {
 	switch (heading) {
 		case "wallDrapes":
 			drape.type = "velour";
-			drape.id = "walls";
+			drape.id = "Wall";
 		break;
 		case "windowDrapes":
 			drape.type = "velour";
-			drape.id = "windows";
+			drape.id = "Window";
 		break;
 		case "blackouts":
 			drape.type = "blackouts";
-			drape.id = "windows";
+			drape.id = "all";
 		break;
 		case "viewingBlind":
 			drape.type = "blackouts";
-			drape.id = "viewing";
+			drape.id = "Viewing";
 		break;
 		case "louvres":
 			drape.type = "louvres";

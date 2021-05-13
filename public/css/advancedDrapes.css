@@ -1,44 +1,24 @@
 table {
-	margin-left: auto;
-	margin-right: auto;
+	width: 100%;
+	height: 100%;
 	text-align: center;
 }
-thead {
-	background-color: #555;
-	font-weight: bolder;
+th {
+	font-size: 20px;
+	height: 1px;
 }
-thead td {
-	padding: 5px;
-}
-tbody > tr {
-	height: 50px;
-}
-tbody td {
-	width: 100px;
+#drapeTable {
+	height: 100%;
 }
 .button {
 	cursor: pointer;
 }
-tbody td.open {
+.button.Open {
 	background-color: #242;
 }
-tbody td.close {
+.button.Close {
 	background-color: #422;
 }
-tbody td.close:hover, tbody td.open:hover {
+.button:hover {
 	background-color: #000;
-}
-span {
-	display: inline-block;
-	box-sizing: border-box;
-	width: 50%;
-	height: 100%;
-}
-span:first-child {
-	float:left;
-}
-iframe {
-	width: 100%;
-	height: 100%;
-	border: 0;
 }

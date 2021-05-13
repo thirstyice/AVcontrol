@@ -48,28 +48,6 @@ function getControlSpace(requestIp) {
 	}
 	return "combined";
 }
-function iPadRedirect(req, res, next) {
-	if (airWallIsDown == true) {
-		if ( ! ( [ // Define pages exempt from redirect
-			"lighting.html",
-			"system-info.html",
-			"drapes.html",
-			"av.html"
-		].includes(req.originalUrl.match("^[^?]*")[0].replace("/pages/", "")))) {
-			var originalUrl = req.originalUrl;
-			if (req.ip === northiPadip) {
-				res.redirect( originalUrl.replace("pages", "pages-north"));
-				return;
-			} else if (req.ip === southiPadip) {
-				res.redirect( originalUrl.replace("pages", "pages-south"));
-				return;
-			}
-		}
-	}
-	next();
-}
-
-app.use("/pages", iPadRedirect);
 
 app.use("/", express.static("public"));
 
@@ -96,49 +74,38 @@ io.on('connection', (socket) => {
 		io.emit("set-system-info", info);
 	});
 
+	socket.on("getDrapeConfiguration", (drapeType, callback) => {
+		var config = {};
+		var controlSpace = getControlSpace(socket.handshake.address);
+		if (controlSpace == "combined") {
+			controlSpace = "";
+		} else {
+			controlSpace = controlSpace + " ";
+		}
+		controlSpace = controlSpace.replace(/^\w/, (c) => c.toUpperCase());
+		config.header = controlSpace + drapeType.replace(/^\w/, (c) => c.toUpperCase());
+		config.table = configuration[drapeType].table[getControlSpace(socket.handshake.address)];
+		callback(config);
+	});
+
 	socket.on("moveDrape", (drape) => {
-		if (drape.type == "velour") {
-			if (drape.id == "walls") {
-				if (socket.handshake.address != southiPadip || airWallIsDown == false) {
-					velour[drape.direction](1);
-					velour[drape.direction](2);
+		var patch = configuration[drape.type]["patch"][getControlSpace(socket.handshake.address)] ;
+		if (drape.type == "louvres") {
+			// TODO: louvre control
+			return;
+		}
+		for (key in patch) {
+			if (key.includes(drape.id)) {
+				switch (drape.type) {
+					case "velour":
+						velour[drape.direction.toLowerCase()](patch[key]);
+					break;
+					case "blackouts":
+						blackouts.move(patch[key], drape.direction.toLowerCase());
+					break;
+					default: console.error("Unknown Drape Type: " + drape.type);
 				}
-				if (socket.handshake.address != northiPadip || airWallIsDown == false) {
-					velour[drape.direction](3);
-					velour[drape.direction](4);
-				}
-			} else if (drape.id == "windows") {
-				if (socket.handshake.address != southiPadip || airWallIsDown == false) {
-					velour[drape.direction](9);
-					velour[drape.direction](10);
-				}
-				if (socket.handshake.address != northiPadip || airWallIsDown == false) {
-					velour[drape.direction](5);
-					velour[drape.direction](6);
-					velour[drape.direction](7);
-					velour[drape.direction](8);
-				}
-			} else {
-				velour[ drape.direction ](drape.id);
 			}
-		} else if (drape.type == "blackouts") {
-			if (drape.id == "viewing") {
-				if (socket.handshake.address != northiPadip || airWallIsDown == false) {
-					blackouts.move(0, drape.direction);
-				}
-			} else if (drape.id == "windows") {
-				if (socket.handshake.address == southiPadip && airWallIsDown == true) {
-					blackouts.move("south", drape.direction);
-				} else if (socket.handshake.address == northiPadip && airWallIsDown == true) {
-					blackouts.move("north", drape.direction);
-				} else {
-					blackouts.move("all", drape.direction);
-				}
-			} else {
-				blackouts.move(drape.id, drape.direction);
-			}
-		} else if (drape.type = "louvres") {
-			// TODO: Handle louvres: open, close, tiltopen, tiltclose
 		}
 	});
 	socket.on("getExtronConfiguration", (callback) => {

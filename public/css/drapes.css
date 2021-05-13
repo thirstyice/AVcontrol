@@ -4,9 +4,14 @@ table {
 	text-align: center;
 	table-layout: fixed;
 }
+#headings {
+	height: 50px;
+}
 th {
 	background-color: #111;
 	padding: 5px;
+	padding-bottom: 15px;
+	font-size: 18px;
 }
 tbody td {
 	width: 100px;
