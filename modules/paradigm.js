@@ -3,46 +3,7 @@ const Readline = require('@serialport/parser-readline')
 const serialPath = "/dev/null"
 const serialport = new SerialPort(serialPath, {baudRate: 9600, dataBits: 8, stopBits: 1, parity: 'none'});
 
-var presets = {
-	"Studio North":
-	[
-		"House Full",
-		"House Half",
-		"House Glow",
-		"Custom 1",
-		"Custom 2",
-		"Custom 3",
-	],
-	"Studio South":
-	[
-		"House Full",
-		"House Half",
-		"House Glow",
-		"Custom 1",
-		"Custom 2",
-		"Custom 3",
-	],
-	"Global": [
-		"House Full",
-		"House Half",
-		"House Glow",
-		"Custom 1",
-		"Custom 2",
-		"Custom 3",
-		"Stage 1",
-		"Stage 2",
-		"Stage 3",
-		"Stage 4",
-		"Stage 5",
-		"Stage 6",
-		"Stage 7",
-		"Stage 8",
-	]
-}
-
-var messageHandlers = {
-
-}
+var messageHandlers = [[],[]];
 
 function send(sendString) {
 	console.log("Paradigm: sending: " + sendString);
@@ -50,17 +11,6 @@ function send(sendString) {
 }
 exports.send = send;
 
-exports.getSpaces = function () {
-	return presets.keys();
-}
-
-exports.getPresets = function (space="Global") {
-	if (typeof presets[space] !== "undefined") {
-		return presets[space]
-	} else {
-		throw new Error("Space does not exist");
-	}
-};
 exports.activate = function(presetName, space="Global") {
 	var sendString = "pst act " + presetName + "," + space;
 	send(sendString);
@@ -75,8 +25,19 @@ exports.deactivate = function(presetName="", space="Global") {
 	send(sendString);
 }
 exports.addHandler = function (message, handler) {
-	messageHandlers[message] = handler;
+	messageHandlers[0].push(message);
+	messageHandlers[1].push(handler);
 }
+function removeHandler(messageToRemove, handlerToRemove) {
+	messageHandlers[0].forEach((message, index) => {
+		if (message == messageToRemove && messageHandlers[1][index] == handlerToRemove) {
+			messageHandlers[0].splice(index,1);
+			messageHandlers[1].splice(index,1);
+		}
+	});
+}
+exports.removeHandler = removeHandler;
+
 const parser = serialport.pipe(new Readline({ delimiter: '\r' }))
 parser.on('data', function (data) {
 	// var data = port.read()
@@ -84,7 +45,9 @@ parser.on('data', function (data) {
 	if (data.match(/^error/)) {
 		console.error("Paradigm: " + data);
 	}
-	if (messageHandlers.keys().includes(data)) {
-		messageHandlers[data];
-	}
+	messageHandlers[0].forEach( (message, index) => {
+		if (message.test(data)) {
+			messageHandlers[1][index](data);
+		}
+	});
 })

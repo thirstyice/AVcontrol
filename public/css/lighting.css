@@ -3,21 +3,24 @@ table {
 	text-align: center;
 	height:100%;
 }
-td {
+tbody {
+	height:100%;
+}
+tbody td {
 	width: 100px;
 }
-#presets > tr > td {
-	table-layout: fixed;
+tbody > tr > th {
+	height:1px;
+	padding-top: 7px;
+	padding-bottom: 5px;
+	font-size: 18px;
 }
-#Studio_North .button {
-	background-color: #553;
-}
-#Studio_South .button {
-	background-color: #355;
-}
-#Global .button {
+.button {
 	background-color: #242;
 }
-#Studio_North .button:hover, #Studio_South .button:hover, #Global .button:hover {
-	background-color: #111;
+.North.button {
+	background-color: #342;
+}
+.South.button {
+	background-color: #243;
 }

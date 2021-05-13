@@ -10,15 +10,9 @@ th {
 #drapeTable {
 	height: 100%;
 }
-.button {
-	cursor: pointer;
-}
 .button.Open {
 	background-color: #242;
 }
 .button.Close {
 	background-color: #422;
-}
-.button:hover {
-	background-color: #000;
 }

@@ -19,11 +19,6 @@ tbody > tr > th {
 	padding-bottom: 5px;
 	font-size: 18px;
 }
-.button {
-	box-sizing: border-box;
-	padding: 5px;
-	height: 57px;
-}
 .videoTable .button {
 	background-color: #442;
 }
@@ -44,9 +39,6 @@ tbody > tr > th {
 }
 .BluRayControl.button{
 	background-color: #244;
-}
-.button:hover {
-	background-color: #000;
 }
 #audioControls {
 	height: 0;

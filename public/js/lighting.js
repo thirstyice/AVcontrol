@@ -1,31 +1,30 @@
 const socket = io();
-socket.on("setLightingPresets", (presets) => {
-	for (const [space, buttons] of Object.entries(presets)) {
-		var table = document.createElement("table")
-		table.setAttribute("id", space);
-
-		for (var row of buttons) {
-			var rowElement = document.createElement("tr");
-			for (const [id, name] of Object.entries(row)) {
-				var button = document.createElement("td");
-				button.id = `${id}`;
-				if ( name != "" ) {
-					button.className = "button";
-				}
-				button.setAttribute("onclick", "clicked(this.id)")
-				button.innerText = name;
-				rowElement.appendChild(button);
-			};
-			table.appendChild(rowElement);
-		}
-		var cell = document.createElement("td")
-		cell.appendChild(table)
-		document.getElementById("presets").getElementsByTagName("tr")[0].appendChild(cell);
+function makeTableBody(array, action) {
+	var tbody = document.createElement("tbody");
+	if (array==null) {
+		return tbody;
 	}
-});
-window.onload = function() {
-	socket.emit("getLightingPresets");
+	for (var row of array) {
+		var tr = tbody.appendChild(document.createElement("tr"));
+		for (var cell of row) {
+			var td = tr.appendChild(document.createElement("td"));
+			if ( cell != "") {
+				td.innerText = cell;
+				td.setAttribute("onclick", action + "(this.innerText)");
+				td.setAttribute("class", "button " + cell.replace(/[-]/g, ""));
+			}
+		}
+	}
+	return tbody;
 }
-function clicked(space, preset) {
-	// TODO: Change lighting presets
+window.onload = function() {
+	socket.emit("getLightingPresets", (config) => {
+		var tbody = makeTableBody(config, "activatePreset");
+		for (table of document.getElementsByClassName("lightingTable")) {
+			table.appendChild(tbody);
+		}
+	});
+}
+function activatePreset(preset) {
+	socket.emit("activateLightingPreset", preset);
 }

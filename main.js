@@ -45,6 +45,7 @@ function getControlSpace(requestIp) {
 		} else if (requestIp.includes(southiPadip)) {
 			return "south";
 		}
+		return "split";
 	}
 	return "combined";
 }
@@ -157,25 +158,18 @@ io.on('connection', (socket) => {
 		io.emit("audioSlider", {level: level});
 	});
 
-	socket.on("getLightingPresets", () => {
-		var presets;
-		if (airWallIsDown == false) {
-			presets = { Global: paradigm.getPresets("Global") };
-		} else {
-			if (socket.handshake.address.includes(northiPadip)) {
-				presets = { Studio_North: paradigm.getPresets("Studio North") };
-			} else if (socket.handshake.address.includes(southiPadip)) {
-				presets = { Studio_South: paradigm.getPresets("Studio South") };
-			} else {
-				presets = {
-					Studio_North: paradigm.getPresets("Studio North"),
-					Studio_South: paradigm.getPresets("Studio South")
-				}
-			}
-		}
-		socket.emit("setLightingPresets", presets);
+	socket.on("getLightingPresets", (callback) => {
+		callback(configuration.paradigm.presets[getControlSpace(socket.handshake.address)]);
 	});
-	socket.on("setLightingPreset", (preset, space) => {
+	socket.on("activateLightingPreset", (preset) => {
+		var controlSpace = getControlSpace(socket.handshake.address);
+		var space = "";
+		if (controlSpace == "split") {
+			space = "Studio " + preset.match(/^South|North/);
+			preset = preset.replace(/^South|North /, "");
+		} else {
+			space = configuration.paradigm.spaces[controlSpace]
+		}
 		paradigm.activate(preset, space);
 	});
 	socket.on("lightsOff", () => {
