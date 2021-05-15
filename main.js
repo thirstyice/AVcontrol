@@ -51,7 +51,7 @@ function getControlSpace(requestIp) {
 	return "combined";
 }
 
-app.use("/", express.static("public"));
+app.use("/", express.static(__dirname + "/public"));
 
 var server = https.createServer(httpsOptions, app);
 const io = new Server(server);
