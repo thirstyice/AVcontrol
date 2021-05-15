@@ -98,18 +98,51 @@ exports.projector = {
 exports.bluRayControl = {
 	table: {
 		north: [
-
+			["Off","","Up","","On"],
+			["Return","Left","Enter","Right","Vol Up"],
+			["Title Menu","","Down","","Mute"],
+			["Menu", "Prev","Down","Next","Vol Down"],
+			["Rewind", "Stop", "Play", "Pause", "Fast Forward"],
 		],
 		south: [
 
 		],
 		combined: [
-			["test", "button"],
-			["second", "row"]
+			["Off","","Up","","On"],
+			["Return","Left","Enter","Right","Vol Up"],
+			["Title Menu","","Down","","Mute"],
+			["Menu", "Prev","Down","Next","Vol Down"],
+			["Rewind", "Stop", "Play", "Pause", "Fast Forward"],
 		],
 		split: [
-
+			["Off","","Up","","On"],
+			["Return","Left","Enter","Right","Vol Up"],
+			["Title Menu","","Down","","Mute"],
+			["Menu", "Prev","Down","Next","Vol Down"],
+			["Rewind", "Stop", "Play", "Pause", "Fast Forward"],
 		]
+	},
+	patch: {
+		On: "PON",
+		Off: "POF",
+		"Vol Up":"VUP",
+		"Vol Down": "VDN",
+		Mute: "MUT",
+		Play: "PLA",
+		Stop: "STP",
+		Pause: "PAU",
+		Prev: "PRE",
+		Next: "NXT",
+		"Fast Forward": "FWD",
+		Rewind: "REV",
+		Menu: "MNU",
+		"Title Menu": "TTL",
+		Up: "NUP",
+		Down: "NDN",
+		Left: "NLT",
+		Right: "NRT",
+		Enter: "SEL",
+		Return: "RET",
 	}
 }
 exports.blackouts = {

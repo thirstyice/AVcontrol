@@ -118,5 +118,5 @@ function projector(action) {
 	}
 }
 function bluRayControl(action) {
-	
+	socket.emit("bluRay", action);
 }

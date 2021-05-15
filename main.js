@@ -11,7 +11,8 @@ const blackouts = require("./modules/blackouts");
 const paradigm = require("./modules/paradigm");
 const extron = require("./modules/extron");
 const screens = require("./modules/screens");
-const projector = require("./modules/projector")
+const projector = require("./modules/projector");
+const bluRay = require("./modules/bluRay");
 
 var airWallIsDown = false;
 var audioIsMuted = false;
@@ -144,9 +145,12 @@ io.on('connection', (socket) => {
 		} else if (command.match(/On|Off/)) {
 			projector[command.toLowerCase()]();
 		} else {
-			console.error("Unrecognizes command:" + command);
+			console.error("Unrecognized command:" + command);
 		}
 	});
+	socket.on("bluRay", (command) => {
+		bluRay.sendCommand(configuration.bluRayControl.patch[command]);
+	})
 	socket.on("getAudioSliderValues", () => {
 		if (getControlSpace(socket.handshake.address) == "south") {
 			return;
