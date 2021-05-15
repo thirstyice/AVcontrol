@@ -95,6 +95,23 @@ exports.projector = {
 		}
 	}
 }
+exports.bluRayControl = {
+	table: {
+		north: [
+
+		],
+		south: [
+
+		],
+		combined: [
+			["test", "button"],
+			["second", "row"]
+		],
+		split: [
+
+		]
+	}
+}
 exports.blackouts = {
 	table:{
 		north: [

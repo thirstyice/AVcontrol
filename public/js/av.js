@@ -92,6 +92,12 @@ window.onload = function() {
 		for (table of document.getElementsByClassName("projectorTable")) {
 			table.appendChild(tbody);
 		}
+	});
+	socket.emit("getBluRayControlConfiguration", (config) => {
+		var tbody = makeTableBody(config, "bluRayControl");
+		for (table of document.getElementsByClassName("bluRayControlTable")) {
+			table.appendChild(tbody);
+		}
 	})
 }
 function audio(source) {
@@ -105,8 +111,12 @@ function screen(action) {
 }
 function projector(action) {
 	if (action == "Blu-Ray Control") {
-		// TODO: blu ray control window
+		console.info("Opening modal: bluRayControlModal");
+		document.getElementById("bluRayControlModal").style.display = "block";
 	} else {
 		socket.emit("projector", action);
 	}
+}
+function bluRayControl(action) {
+	
 }

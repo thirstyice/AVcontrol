@@ -120,6 +120,9 @@ io.on('connection', (socket) => {
 	socket.on("getProjectorConfiguration", (callback) => {
 		callback(configuration.projector.table[getControlSpace(socket.handshake.address)]);
 	});
+	socket.on("getBluRayControlConfiguration", (callback) => {
+		callback(configuration.bluRayControl.table[getControlSpace(socket.handshake.address)]);
+	});
 	socket.on("extron", (info) => {
 		extron.setPath(configuration.extron.patch.inputs[info.input], "all", info.media);
 	});

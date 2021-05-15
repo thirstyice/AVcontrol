@@ -17,6 +17,9 @@ h1 {
 	margin-top: 12px;
 	margin-bottom: 12px;
 }
+h3 {
+	text-align:center;
+}
 a {
 	height: 100%;
 	width: 100%;

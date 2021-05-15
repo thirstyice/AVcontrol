@@ -71,5 +71,19 @@
 				</tr>
 			</tbody>
 		</table>
+		<div id="bluRayControlModal" class="modal" onclick="this.style.display='none'">
+			<div class="modalContent" onclick="arguments[0].stopPropagation()">
+				<span
+					class="modalClose"
+					onclick="this.parentElement.parentElement.style.display = 'none'"
+				>
+					&otimes;
+				</span>
+				<h3>Blu-Ray Control</h3>
+				<table class="bluRayControlTable">
+
+				</table>
+			</div>
+		</div>
 	</body>
 </html>
