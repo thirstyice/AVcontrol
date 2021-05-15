@@ -103,6 +103,10 @@ function video(source) {
 function screen(action) {
 	socket.emit("screen", action);
 }
-function projector() {
-	// TODO:
+function projector(action) {
+	if (action == "Blu-Ray Control") {
+		// TODO: blu ray control window
+	} else {
+		socket.emit("projector", action);
+	}
 }

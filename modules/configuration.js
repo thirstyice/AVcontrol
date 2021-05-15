@@ -86,6 +86,13 @@ exports.projector = {
 			["Blu-Ray Control", "On"],
 			["Preset North", "Off"]
 		],
+	},
+	patch: {
+		presets: {
+			North:5,
+			High:7,
+			Low:8
+		}
 	}
 }
 exports.blackouts = {

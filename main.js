@@ -11,8 +11,9 @@ const blackouts = require("./modules/blackouts");
 const paradigm = require("./modules/paradigm");
 const extron = require("./modules/extron");
 const screens = require("./modules/screens");
+const projector = require("./modules/projector")
 
-var airWallIsDown = true;
+var airWallIsDown = false;
 var audioIsMuted = false;
 
 paradigm.addHandler("wall close Wall Aud1 + Aud2, Global", () => {
@@ -130,6 +131,17 @@ io.on('connection', (socket) => {
 			screens[configuration.screens.patch[
 				controlSpace.replace(/^\w/, (c) => c.toUpperCase()) + " " + command
 			]]();
+		}
+	});
+	socket.on("projector", (command) => {
+		if (command.match(/^Preset/)) {
+			projector.setChannel(
+				configuration.projector.patch.presets[command.replace(/^Preset /, "")]
+			);
+		} else if (command.match(/On|Off/)) {
+			projector[command.toLowerCase()]();
+		} else {
+			console.error("Unrecognizes command:" + command);
 		}
 	});
 	socket.on("getAudioSliderValues", () => {
