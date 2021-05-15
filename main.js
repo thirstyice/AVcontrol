@@ -36,8 +36,8 @@ const northiPadip = "::ffff:192.168.100.254";
 
 
 const httpsOptions = {
-	key: fs.readFileSync('key.pem'),
-	cert: fs.readFileSync('cert.pem')
+	key: fs.readFileSync(__dirname + '/key.pem'),
+	cert: fs.readFileSync(__dirname + '/cert.pem')
 };
 function getControlSpace(requestIp) {
 	if (airWallIsDown==true) {
