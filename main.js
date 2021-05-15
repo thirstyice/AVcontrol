@@ -3,7 +3,7 @@ const https = require("https");
 const fs = require("fs");
 const express = require("express");
 const app = express();
-const port = 7077;
+const port = 443;
 const { Server } = require("socket.io");
 const configuration = require("./modules/configuration");
 const velour = require("./modules/velour.js");
@@ -194,7 +194,7 @@ var http = express();
 http.get('*', function(req, res) {
 	res.redirect('https://' + req.headers.host + req.url);
 })
-http.listen(8080);
+http.listen(80);
 
 // And serve the server
 server.listen(port, () => {
