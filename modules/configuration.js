@@ -101,7 +101,7 @@ exports.bluRayControl = {
 			["Off","","Up","","On"],
 			["Return","Left","Enter","Right","Vol Up"],
 			["Title Menu","","Down","","Mute"],
-			["Menu", "Prev","Down","Next","Vol Down"],
+			["Menu", "Prev","","Next","Vol Down"],
 			["Rewind", "Stop", "Play", "Pause", "Fast Forward"],
 		],
 		south: [
@@ -111,14 +111,14 @@ exports.bluRayControl = {
 			["Off","","Up","","On"],
 			["Return","Left","Enter","Right","Vol Up"],
 			["Title Menu","","Down","","Mute"],
-			["Menu", "Prev","Down","Next","Vol Down"],
+			["Menu", "Prev","","Next","Vol Down"],
 			["Rewind", "Stop", "Play", "Pause", "Fast Forward"],
 		],
 		split: [
 			["Off","","Up","","On"],
 			["Return","Left","Enter","Right","Vol Up"],
 			["Title Menu","","Down","","Mute"],
-			["Menu", "Prev","Down","Next","Vol Down"],
+			["Menu", "Prev","","Next","Vol Down"],
 			["Rewind", "Stop", "Play", "Pause", "Fast Forward"],
 		]
 	},

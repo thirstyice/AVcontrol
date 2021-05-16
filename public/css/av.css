@@ -18,6 +18,7 @@ tbody > tr > th {
 	padding-top: 7px;
 	padding-bottom: 5px;
 	font-size: 18px;
+	vertical-align: bottom;
 }
 .videoTable .button {
 	background-color: #442;
@@ -31,13 +32,22 @@ tbody > tr > th {
 .projectorTable .button {
 	background-color: #444;
 }
-.projectorTable .Off  {
+.bluRayControlTable .button {
+	height: 40px;
+}
+.Off.button, .Return.button, .Mute.button, .Stop.button  {
 	background-color: #422;
 }
-.projectorTable .On {
+.On.button, .Enter.button, .Play.button {
 	background-color: #242;
 }
-.BluRayControl.button{
+.Pause.button {
+	background-color: #442;
+}
+.BluRayControl.button {
+	background-color: #244;
+}
+.TitleMenu.button, .Menu.button {
 	background-color: #244;
 }
 #audioControls {
@@ -96,7 +106,7 @@ tbody > tr > th {
 	display: none;
 	position: fixed;
 	z-index: 1;
-	padding-top: 50px;
+	padding-top: 20px;
 	left: 0;
 	top: 0;
 	width: 100%;
@@ -106,13 +116,19 @@ tbody > tr > th {
 }
 .modalContent {
 	width: 80%;
+	height: 80%;
 	background-color: #222;
 	margin-left: auto;
 	margin-right: auto;
 	padding: 15px;
+	padding-top: 5px;
+	min-height: 320px;
+	position: relative;
 }
 .modalClose {
-	float: right;
+	position:absolute;
+	top:10px;
+	left: 10px;
 	font-weight: bold;
 	font-size: 30px;
 	cursor: pointer;
