@@ -1,4 +1,22 @@
 const socket = io();
+function makeTableBody(array, action) {
+	var tbody = document.createElement("tbody");
+	if (array==null) {
+		return tbody;
+	}
+	for (var row of array) {
+		var tr = tbody.appendChild(document.createElement("tr"));
+		for (var cell of row) {
+			var td = tr.appendChild(document.createElement("td"));
+			if ( cell != "") {
+				td.innerText = cell;
+				td.setAttribute("onclick", action + "(this.innerText)");
+				td.setAttribute("class", "button " + cell.replace(/[-]/g, ""));
+			}
+		}
+	}
+	return tbody;
+}
 window.onload = function () {
 	var url = new URL(window.location)
 	var id;
@@ -20,7 +38,17 @@ window.onload = function () {
 			menuItems.item(i).classList.remove("active");
 		}
 	}
+	socket.emit("getSystemShutdownConfiguration", (config) => {
+		var tbody = makeTableBody(config, "systemShutdown");
+		for (table of document.getElementsByClassName("systemShutdownTable")) {
+			table.appendChild(tbody);
+		}
+	});
+
 }
-function lightsOff() {
-	socket.emit("lightsOff")
+function openModal(modalId) {
+	document.getElementById(modalId).style.display = 'block'
+}
+function systemShutdown(command) {
+	socket.emit("systemShutdown", command);
 }

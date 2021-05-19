@@ -1,7 +1,7 @@
 const SerialPort = require("serialport");
 const port = new SerialPort(
 	"/dev/null",
-	{baudRate: 9600, dataBits: 8, stopBits: 1, parity: 'none'}
+	{baudRate: 115200, dataBits: 8, stopBits: 1, parity: 'none'}
 );
 port.on('error', (err) => {
 	console.error("Projector: " + err);
@@ -9,7 +9,7 @@ port.on('error', (err) => {
 
 function send(sendString) {
 	console.info('Projector write: ' + sendString);
-	serialport.write(sendString + "\r\n");
+	port.write(sendString + "\r\n");
 }
 
 exports.on = function () {

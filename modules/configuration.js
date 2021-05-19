@@ -1,3 +1,23 @@
+exports.systemShutdown = {
+	table: {
+		north: [
+			["Shutdown As-Is"],
+			["Shutdown to Base State"]
+		],
+		south: [
+			["Shutdown As-Is"],
+			["Shutdown to Base State"]
+		],
+		split: [
+			["Shutdown North As-Is", "Shutdown South As-Is"],
+			["Shutdown North to Base State", "Shutdown South to Base State"]
+		],
+		combined: [
+			["Shutdown As-Is"],
+			["Shutdown to Base State"]
+		]
+	}
+}
 exports.extron = {
 	patch:{
 		inputs: {

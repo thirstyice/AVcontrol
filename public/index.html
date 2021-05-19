@@ -15,10 +15,36 @@
 			<li><a href="?page=av">Audio/Video</a></li>
 			<li><a href="?page=lighting">Lighting</a></li>
 			<li><a href="?page=system-info">System Info</a></li>
-			<li><a onclick="lightsOff()">Lights Off</a></li>
+			<li><a onclick="openModal('systemShutdownModal')">Shutdown</a></li>
 		</ul>
 		<div id="iframe-container">
 			<iframe src=""></iframe>
+		</div>
+		<div id="systemShutdownModal" class="modal" onclick="this.style.display='none'">
+			<div class="modalContent" onclick="arguments[0].stopPropagation()">
+				<span
+					class="modalClose"
+					onclick="this.parentElement.parentElement.style.display = 'none'"
+				>
+					&otimes;
+				</span>
+				<table>
+					<tbody>
+						<tr>
+							<th>
+								Shutdown options
+							</th>
+						</tr>
+						<tr>
+							<td>
+								<table class="systemShutdownTable">
+
+								</table>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</body>
 </html>

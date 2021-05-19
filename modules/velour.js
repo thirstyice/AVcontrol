@@ -6,7 +6,7 @@ serialport.on('error', (err) => {
 	console.error("Velour: " + err);
 });
 
-exports.open = function (curtainId, direction) {
+exports.open = function (curtainId) {
 	console.info("Velour: Opening: " + curtainId);
 	serialport.write("01" + curtainId.toString().padStart(2,"0") + "U");
 };

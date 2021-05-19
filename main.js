@@ -78,6 +78,39 @@ io.on('connection', (socket) => {
 		io.emit("set-system-info", info);
 	});
 
+	socket.on("getSystemShutdownConfiguration", (callback) => {
+		callback(configuration.systemShutdown.table[getControlSpace(socket.handshake.address)]);
+	})
+	socket.on("systemShutdown", (command) => {
+		command = command.replace("Shutdown ", "");
+		var controlSpace = getControlSpace(socket.handshake.address);
+		if (controlSpace == "split") {
+			controlSpace = command.match(/North|South/).toLowerCase();
+			command = command.replace(/North |South /, "");
+		}
+		switch (controlSpace) {
+			case "north": case "combined":
+				projector.off();
+				bluRay.sendCommand("POF");
+			break;
+		}
+		if (/Base State/.test(command)) {
+			// TODO: Use groupids for velours
+			let velours = configuration.velour.patch[controlSpace];
+			for (key in velours) {
+				velour.open(velours[key]);
+			}
+			if (controlSpace != "north") {
+				screens.raiseSouth();
+			}
+			if (controlSpace != "south") {
+				screens.raiseNorth();
+			}
+			blackouts.move(configuration.blackouts.patch[controlSpace].all,"open")
+		}
+		paradigm.deactivate("", configuration.paradigm.spaces[controlSpace]);
+	});
+
 	socket.on("getDrapeConfiguration", (drapeType, callback) => {
 		var config = {};
 		var controlSpace = getControlSpace(socket.handshake.address);
@@ -191,20 +224,6 @@ io.on('connection', (socket) => {
 			space = configuration.paradigm.spaces[controlSpace]
 		}
 		paradigm.activate(preset, space);
-	});
-	socket.on("lightsOff", () => {
-		if (airWallIsDown == true) {
-			space = "Global";
-		} else {
-			if (socket.handshake.address.includes(northiPadip)) {
-				space = "Studio North";
-			} else if (socket.handshake.address.includes(southiPadip)) {
-				space = "Studio South";
-			} else {
-				space = "Global";
-			}
-		}
-		paradigm.deactivate("", space);
 	});
 });
 
