@@ -45,8 +45,8 @@ function drapeControl(caller) {
 	space = space ? space : "";
 	var drape = {
 		type: drapeType,
-		id: space + caller.innerText.replace(/Open|Close/g, "").trim(),
-		direction: caller.innerText.match(/Open|Close/)[0]
+		id: space + caller.innerText.replace(/Open|Close|Auto/g, "").trim(),
+		direction: caller.innerText.match(/Open|Close|Auto/)[0]
 	};
 	socket.emit("moveDrape", drape);
 }

@@ -352,7 +352,7 @@ exports.basicDrapes = {
 			["Close Wall", "", "", "", "Tilt Close"],
 			["Open Windows", "", "Open Windows", "", "Open"],
 			["Close Windows", "", "Close Windows", "", "Close"],
-			["Advanced", "", "Advanced", "", ""],
+			["Advanced", "", "Advanced", "", "Auto"],
 		],
 		south: [
 			["Velours", "", "Blackouts", "", "Louvres"],
@@ -360,7 +360,7 @@ exports.basicDrapes = {
 			["Close Wall", "", "", "Close Viewing", "Tilt Close"],
 			["Open Windows", "", "Open Windows", "", "Open"],
 			["Close Windows", "", "Close Windows", "", "Close"],
-			["Advanced", "", "Advanced", "", ""],
+			["Advanced", "", "Advanced", "", "Auto"],
 		],
 		combined: [
 			["Velours", "", "Blackouts", "", "Louvres"],
@@ -368,7 +368,7 @@ exports.basicDrapes = {
 			["Close Wall", "", "Close Viewing", "", "Tilt Close"],
 			["Open Windows", "", "Open Windows", "", "Open"],
 			["Close Windows", "", "Close Windows", "", "Close"],
-			["Advanced", "", "Advanced", "", ""],
+			["Advanced", "", "Advanced", "", "Auto"],
 		],
 		split: [
 			["North Velour", "North Black-outs", "North Louvres","", "South Velour", "South Black-outs", "South Louvres"],
@@ -376,7 +376,7 @@ exports.basicDrapes = {
 			["Close Wall"   , ""               , "Tilt Close"   ,"", "Close Wall"   , "Close Viewing"  , "Tilt Close"],
 			["Open Windows" , "Open Windows"   , "Open"         ,"", "Open Windows" , "Open Windows"   , "Open"],
 			["Close Windows", "Close Windows"  , "Close"        ,"", "Close Windows", "Close Windows"  , "Close"],
-			["Advanced"     , "Advanced"       , ""             ,"", "Advanced"     , "Advanced"       , ""],
+			["Advanced"     , "Advanced"       , "Auto"         ,"", "Advanced"     , "Advanced"       , "Auto"],
 		]
 	},
 }

@@ -27,3 +27,6 @@ exports.tiltopen = function (group) {
 exports.tiltclose = function (group) {
 	sendCommand(":" + group + "0600010016--");
 }
+exports.auto = function (group) {
+	sendCommand(":" + group + "06000104C--");
+}
