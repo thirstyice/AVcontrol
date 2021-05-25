@@ -83,10 +83,11 @@ io.on('connection', (socket) => {
 		callback(configuration.systemShutdown.table[getControlSpace(socket.handshake.address)]);
 	})
 	socket.on("systemShutdown", (command) => {
+		console.info("Shutdown: " + command);
 		command = command.replace("Shutdown ", "");
 		var controlSpace = getControlSpace(socket.handshake.address);
 		if (controlSpace == "split") {
-			controlSpace = command.match(/North|South/).toLowerCase();
+			controlSpace = command.match(/North|South/)[0].toLowerCase();
 			command = command.replace(/North |South /, "");
 		}
 		switch (controlSpace) {
@@ -96,6 +97,7 @@ io.on('connection', (socket) => {
 			break;
 		}
 		if (/Base State/.test(command)) {
+			louvres.auto(configuration.louvres.patch[controlSpace]);
 			velour.open(configuration.velour.patch[controlSpace].Windows);
 			velour.open(configuration.velour.patch[controlSpace].Wall);
 			if (controlSpace != "north") {
