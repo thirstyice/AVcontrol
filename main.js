@@ -96,11 +96,8 @@ io.on('connection', (socket) => {
 			break;
 		}
 		if (/Base State/.test(command)) {
-			// TODO: Use groupids for velours
-			let velours = configuration.velour.patch[controlSpace];
-			for (key in velours) {
-				velour.open(velours[key]);
-			}
+			velour.open(configuration.velour.patch[controlSpace].Windows);
+			velour.open(configuration.velour.patch[controlSpace].Wall);
 			if (controlSpace != "north") {
 				screens.raiseSouth();
 			}
