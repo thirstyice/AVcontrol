@@ -1,32 +1,6 @@
 const socket = io();
 
 socket.on("audioSlider", (sliderValues) => {
-	console.log(sliderValues);
-	if (!sliderValues) {
-		var tr = document.getElementById("audioControls").
-			appendChild(document.createElement("td")).
-			appendChild(document.createElement("table")).
-			appendChild(document.createElement("tbody")).
-			appendChild(document.createElement("tr"));
-
-		var slider = tr.
-			appendChild(document.createElement("td")).
-			appendChild(document.createElement("input"));
-			slider.parentElement.id = "sliderContainer";
-		slider.setAttribute("type", "range");
-		slider.setAttribute("min", "0");
-		slider.setAttribute("max", "64");
-		slider.id = "audioSlider";
-		slider.setAttribute("onchange", "socket.emit('setAudioLevel', this.value)");
-
-		var muteButton = tr.
-			appendChild(document.createElement("td")).
-			appendChild(document.createElement("button"));
-		muteButton.setAttribute("onclick", "socket.emit('toggleMute')");
-		muteButton.id = "muteButton";
-		muteButton.innerText = "Mute";
-
-		document.getElementById("audioControls").style.height = "70px";
 	} else {
 		if (typeof sliderValues.level != "undefined") {
 			var slider = document.getElementById("audioSlider")
@@ -51,6 +25,32 @@ socket.on("audioSlider", (sliderValues) => {
 	}
 });
 
+socket.on("setMixerValues", (values) => {
+	for (device in values) {
+		var sliders = document.getElementsByClassName("slider " + device);
+		if (typeof values[device].level != "undefined") {
+			for (slider of sliders) {
+				slider.setAttribute("value", values[device].level);
+			}
+
+		}
+		var muteButtons = document.getElementsByClassName("button " + device);
+		if (typeof values[device].muted != "undefined") {
+			for (muteButton of muteButtons) {
+				if (values[device].muted) {
+					muteButton.classList.add("muted")
+				} else {
+					muteButton.classList.remove("muted");
+			}
+		}
+	}
+	// Dumb hack to get the updated values to draw by forcing redraw of slider
+	for (sliderContainer of document.getElementsByClassName("sliderContainer")){
+		sliderContainer.style.display = "none";
+		sliderContainer.style.display = "table-cell";
+	}
+});
+
 function makeTableBody(array) {
 	var tbody = document.createElement("tbody");
 	if (array==null) {
@@ -67,12 +67,12 @@ function makeTableBody(array) {
 			heading.innerText = cell;
 			var slider = sliderContainer.appendChild(document.createElement("input"));
 			slider.setAttribute("type", "range");
-			slider.setAttribute("min", "0");
-			slider.setAttribute("max", "100");
-			slider.setAttribute("onchange", "changeLevel(this.innerText)");
+			slider.setAttribute("min", "-70");
+			slider.setAttribute("max", "6");
+			slider.setAttribute("onchange", "changeLevel('" + cell + "')");
 			slider.setAttribute("class", "slider " + cell.replace(/[-]/g, ""));
 			muteButton.innerText = "Mute";
-			muteButton.setAttribute("onclick", "mute(this.innerText)");
+			muteButton.setAttribute("onclick", "mute('" + cell + "')");
 			muteButton.setAttribute("class", "button " + cell.replace(/[-]/g, ""));
 		}
 	}
@@ -88,8 +88,12 @@ window.onload = function() {
 	})
 }
 function mute(device) {
-	socket.emit("mixerMute", device);
+	socket.emit("mixerToggleMute", device);
 }
 function changeLevel(device) {
-	socket.emit("mixerChangeLevel", device);
+	var level = {
+		device: device,
+		level: this.value,
+	}
+	socket.emit("mixerChangeLevel", level);
 }

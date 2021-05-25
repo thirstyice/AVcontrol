@@ -4,7 +4,7 @@ const port = new SerialPort(
 	{baudRate: 115200, dataBits: 8, stopBits: 1, parity: 'none'}
 );
 port.on('error', (err) => {
-	console.error("Projector: " + err);
+	console.error("Tesira: " + err);
 });
 const parser = port.pipe(new Readline({ delimiter: '\r\n' }))
 
@@ -16,15 +16,29 @@ function send(sendString) {
 }
 
 exports.setLevel = function (device, level) {
-	send('"Level' + device + '" set TODO');
+	send('"Level' + device + '" set level 1 ' + level);
 }
 exports.getLevel = function (device, callback) {
 	parser.once("data", (data) => {
 		data = data.match(/[0-9]*/)[0];
 		console.info("Tesira level: " device + " " + data);
 		callback(data);
-	})
-	send('"Level' + device + '" get TODO');
+	});
+	send('"Level' + device + '" get level 1');
+}
+exports.setMute = function (device, muted) {
+	send('"Level' + device + '" set mute 1 ' + (!!muted).toString());
+}
+exports.toggleMute = function (device) {
+	send('"Level' + device + '" toggle mute 1');
+}
+exports.getMuteStatus = function (device, callback) {
+	parser.once("data", (data) => {
+		data = data.match(/false|true/)[0];
+		console.info("Tesira muted: " device + " " + data);
+		callback(data);
+	});
+	send('"Level' + device + '" get mute 1');
 }
 
 parser.on('data', function (data) {

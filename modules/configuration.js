@@ -71,7 +71,7 @@ exports.tesira = {
 			"Boxes", "Pgm"
 		],
 		combined: [
-			"Boxes", "Pgm", "Cinema"
+			"North Boxes", "North Pgm", "Cinema", "South Boxes", "South Pgm"
 		],
 		split: [
 			"North Boxes", "North Pgm", "Cinema", "South Boxes", "South Pgm"
@@ -87,8 +87,11 @@ exports.tesira = {
 			Pgm: 15,
 		},
 		combined: {
-			Boxes: // TODO: ,
-			Pgm: // TODO: ,
+			"North Boxes": 16,
+			"North Pgm": 14,
+			"South Boxes": 13,
+			"South Pgm": 15,
+			"Cinema": 6,
 		},
 		split: {
 			"North Boxes": 16,

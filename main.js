@@ -10,29 +10,28 @@ const velour = require("./modules/velour.js");
 const blackouts = require("./modules/blackouts");
 const paradigm = require("./modules/paradigm");
 const extron = require("./modules/extron");
+const tesira = require("./modules/tesira");
 const screens = require("./modules/screens");
 const projector = require("./modules/projector");
 const bluRay = require("./modules/bluRay");
 const louvres = require("./modules/louvres");
 
 var airWallIsDown = false;
-var audioIsMuted = false;
+
+function airWallDidMove(isDown) {
+	airWallIsDown = isDown;
+	io.emit("refresh");
+}
 
 paradigm.addHandler("wall close Wall Aud1 + Aud2, Global", () => {
-	airWallIsDown = false;
+	airWallDidMove(false);
 });
 paradigm.addHandler("wall open Wall Aud1 + Aud2, Global", () => {
-	airWallIsDown = true;
+	airWallDidMove(true);
 });
 paradigm.send("wall get Wall Aud1 + Aud2");
 
-extron.addHandler(/Amt05\*/, (data) => {
-	audioIsMuted = !!data.replace(/Amt05\*/,"").parseInt();
-	io.emit("audioSlider", {muted: audioIsMuted});
-});
-extron.addHandler(/Out05 Vol/, (data) => {
-	io.emit("audioSlider", {level:data.replace(/Out05 Vol\*/,"").parseInt()});
-});
+
 
 const southiPadip = "::ffff:192.168.100.253";
 const northiPadip = "::ffff:192.168.100.254";
@@ -52,6 +51,22 @@ function getControlSpace(requestIp) {
 		return "split";
 	}
 	return "combined";
+}
+function setMixerValues() {
+	for (socket of io.sockets.sockets) {
+		socket = socket[1];
+		var levels = {  };
+		var devices = configuration.tesira.patch[getControlSpace(socket.handshake.address)];
+		for (device in devices) {
+			tesira.getLevel(devices[device], (level) => {
+				levels[device].level = level;
+			});
+			tesira.getMuteStatus(devices[device], (muted) => {
+				levels[device].muted = muted;
+			});
+		}
+		socket.emit("setMixerValues", levels);
+	}
 }
 
 app.use("/", express.static(__dirname + "/public"));
@@ -188,11 +203,15 @@ io.on('connection', (socket) => {
 	socket.on("getMixerConfiguration", (callback) => {
 		callback(configuration.tesira.table[getControlSpace(socket.handshake.address)]);
 	});
-	socket.on("mixerMute", (device) => {
-		// TODO:
+	socket.on("mixerToggleMute", (device) => {
+		var device = configuration.tesira.patch[getControlSpace(socket.handshake.address)][device];
+		tesira.toggleMute(device);
+		setMixerValues();
 	});
-	socket.on("mixerChangeLevel", (device) => {
-		// TODO: 
+	socket.on("mixerChangeLevel", (level) => {
+		var device = configuration.tesira.patch[getControlSpace(socket.handshake.address)][level.device];
+		tesira.setLevel(device, level.level);
+		setMixerValues();
 	});
 
 	socket.on("getLightingPresets", (callback) => {
