@@ -21,9 +21,9 @@ exports.close = function (group) {
 exports.stop = function (group) {
 	sendCommand(":" + group + "0600010028--");
 }
-exports.tiltOpen = function (group) {
+exports.tiltopen = function (group) {
 	sendCommand(":" + group + "060001001A--");
 }
-exports.tiltClose = function (group) {
+exports.tiltclose = function (group) {
 	sendCommand(":" + group + "0600010016--");
 }

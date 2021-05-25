@@ -365,7 +365,7 @@ exports.basicDrapes = {
 		combined: [
 			["Velours", "", "Blackouts", "", "Louvres"],
 			["Open Wall", "", "Open Viewing", "", "Tilt Open"],
-			["Close Wall", "", "", "Close Viewing", "Tilt Close"],
+			["Close Wall", "", "Close Viewing", "", "Tilt Close"],
 			["Open Windows", "", "Open Windows", "", "Open"],
 			["Close Windows", "", "Close Windows", "", "Close"],
 			["Advanced", "", "Advanced", "", ""],

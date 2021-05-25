@@ -15,7 +15,7 @@ const projector = require("./modules/projector");
 const bluRay = require("./modules/bluRay");
 const louvres = require("./modules/louvres");
 
-var airWallIsDown = true;
+var airWallIsDown = false;
 var audioIsMuted = false;
 
 paradigm.addHandler("wall close Wall Aud1 + Aud2, Global", () => {
@@ -136,7 +136,7 @@ io.on('connection', (socket) => {
 					controlSpace = drape.id.match(/North|South/)[0].toLowerCase();
 					drape.id = drape.id.replace(/North |South /, "");
 				}
-				louvres[drape.id.toLowerCase() + drape.direction](patch[controlSpace])
+				louvres[drape.id.toLowerCase() + drape.direction.toLowerCase()](patch[controlSpace])
 			break;
 			case "velour":
 				velour[drape.direction.toLowerCase()](patch[controlSpace][drape.id]);
