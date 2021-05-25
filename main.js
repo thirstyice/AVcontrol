@@ -32,7 +32,7 @@ extron.addHandler(/Amt05\*/, (data) => {
 });
 extron.addHandler(/Out05 Vol/, (data) => {
 	io.emit("audioSlider", {level:data.replace(/Out05 Vol\*/,"").parseInt()});
-})
+});
 
 const southiPadip = "::ffff:192.168.100.253";
 const northiPadip = "::ffff:192.168.100.254";

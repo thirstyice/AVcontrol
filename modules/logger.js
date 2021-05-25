@@ -11,13 +11,9 @@ var logger = winston.createLogger({
 	),
 	transports: [
     new winston.transports.File({
-			filename: 'error.log',
-			level: 'error',
+			filename: 'AVcontrol.log',
+			level: 'info',
 			handleExceptions: true
-		}),
-    new winston.transports.File({
-			filename: 'combined.log',
-			level: 'info'
 		}),
   ],
 	exitOnError: false,
