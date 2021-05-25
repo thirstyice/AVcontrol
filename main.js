@@ -184,32 +184,15 @@ io.on('connection', (socket) => {
 	});
 	socket.on("bluRay", (command) => {
 		bluRay.sendCommand(configuration.bluRayControl.patch[command]);
-	})
-	socket.on("getAudioSliderValues", () => {
-		if (getControlSpace(socket.handshake.address) == "south") {
-			return;
-		}
-		socket.emit("audioSlider");
-		extron.requestAudioLevel(5, (audioLevel) => {
-			io.emit("audioSlider", {level:audioLevel})
-		});
-		extron.requestIsMuted(5, (muted) => {
-			io.emit("audioSlider", {muted:!!muted});
-			audioIsMuted = !!muted;
-		})
 	});
-	socket.on("toggleMute", () => {
-		audioIsMuted = !audioIsMuted;
-		if (audioIsMuted) {
-			extron.muteAudio(5);
-		} else {
-			extron.unmuteAudio(5);
-		}
-		io.emit("audioSlider", {muted:audioIsMuted});
-	})
-	socket.on("setAudioLevel", (level) => {
-		extron.setAudioLevel(5, level);
-		io.emit("audioSlider", {level: level});
+	socket.on("getMixerConfiguration", (callback) => {
+		callback(configuration.tesira.table[getControlSpace(socket.handshake.address)]);
+	});
+	socket.on("mixerMute", (device) => {
+		// TODO:
+	});
+	socket.on("mixerChangeLevel", (device) => {
+		// TODO: 
 	});
 
 	socket.on("getLightingPresets", (callback) => {

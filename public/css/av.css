@@ -1,15 +1,6 @@
 #buttonContainer {
 	height: 100%;
 }
-
-table {
-	width:100%;
-	text-align: center;
-	height:100%;
-}
-tbody {
-	height:100%;
-}
 tbody td {
 	width: 100px;
 }
@@ -49,55 +40,6 @@ tbody > tr > th {
 }
 .TitleMenu.button, .Menu.button {
 	background-color: #244;
-}
-#audioControls {
-	height: 0;
-	table-layout: fixed;
-}
-#audioControls td {
-	height: 60px;
-	width: 100%;
-}
-#audioSlider {
-	width: 95%;
-	appearance: none;
-	-webkit-appearance: none;
-	background: #444;
-	outline: none;
-
-}
-#audioSlider::-webkit-slider-thumb {
-	-webkit-appearance: none;
-	appearance: none;
-	width: 25px;
-	height: 25px;
-	background: #66C;
-	cursor: pointer;
-}
-
-#audioSlider::-moz-range-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 25px;
-  height: 25px;
-  background: #66C;
-  cursor: pointer;
-}
-#muteButton {
-	border: none;
-	color: #fff;
-	box-sizing: border-box;
-	padding: 5px 10px;
-	width: 75px;
-	height: 100%;
-	background-color: #555;
-	font-size: 16px;
-}
-#muteButton.muted {
-	background-color: #422;
-}
-#muteButton:hover {
-	background-color: #000;
 }
 
 

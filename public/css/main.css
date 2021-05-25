@@ -26,6 +26,14 @@ a {
 	color: #fff;
 
 }
+table {
+	width:100%;
+	text-align: center;
+	height:100%;
+}
+tbody {
+	height:100%;
+}
 .button {
 	box-sizing: border-box;
 	padding: 5px;

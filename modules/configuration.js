@@ -62,6 +62,43 @@ exports.extron = {
 		}
 	}
 }
+exports.tesira = {
+	table: {
+		north: [
+			"Boxes", "Pgm"
+		],
+		south: [
+			"Boxes", "Pgm"
+		],
+		combined: [
+			"Boxes", "Pgm", "Cinema"
+		],
+		split: [
+			"North Boxes", "North Pgm", "Cinema", "South Boxes", "South Pgm"
+		]
+	},
+	patch: {
+		north: {
+			Boxes: 16,
+			Pgm: 14,
+		},
+		south: {
+			Boxes: 13,
+			Pgm: 15,
+		},
+		combined: {
+			Boxes: // TODO: ,
+			Pgm: // TODO: ,
+		},
+		split: {
+			"North Boxes": 16,
+			"North Pgm": 14,
+			"South Boxes": 13,
+			"South Pgm": 15,
+			"Cinema": 6,
+		}
+	}
+}
 exports.screens = {
 	patch: {
 		"North Up": "raiseNorth",
