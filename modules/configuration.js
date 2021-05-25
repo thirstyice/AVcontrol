@@ -229,6 +229,8 @@ exports.blackouts = {
 			SE:1,
 			Viewing:0,
 			all:"all",
+			"North Windows": "north",
+			"South Windows": "south",
 		},
 		split: {
 			NE:11,
@@ -244,6 +246,8 @@ exports.blackouts = {
 			SE:1,
 			Viewing:0,
 			all:"all",
+			"North Windows": "north",
+			"South Windows": "south",
 		},
 	}
 };
@@ -286,43 +290,96 @@ exports.velour= {
 		north: {
 			"Wall N":1,
 			"Wall S":2,
+			"Wall": 11,
 			"Window N":10,
-			"Window S": 9
+			"Window S": 9,
+			"Windows": 12,
 		},
 		south: {
 			"Wall N":3,
 			"Wall S":4,
+			"Wall": 13,
 			"S Window E": 5,
 			"S Window W": 6,
 			"W Window S": 7,
-			"W Window N": 8
+			"W Window N": 8,
+			"Windows": 14,
 		},
 		combined: {
 			"N Wall N":1,
 			"N Wall S":2,
 			"S Wall N":3,
 			"S Wall S":4,
+			"Wall": 15,
 			"S Window E": 5,
 			"S Window W": 6,
 			"SW Window S": 7,
 			"SW Window N": 8,
 			"NW Window S":9,
-			"NW Window N": 10
+			"NW Window N": 10,
+			"Windows": 16,
 		},
 		split: {
 			"N Wall N":1,
 			"N Wall S":2,
 			"S Wall N":3,
 			"S Wall S":4,
+			"North Wall": 11,
+			"South Wall": 13,
 			"S Window E": 5,
 			"S Window W": 6,
 			"SW Window S": 7,
 			"SW Window N": 8,
 			"NW Window S":9,
-			"NW Window N": 10
+			"NW Window N": 10,
+			"North Windows": 12,
+			"South Windows": 14,
 		},
 	}
 };
+exports.louvres = {
+	patch: {
+		north: "67",
+		south: "66",
+		combined: "65",
+	}
+}
+exports.basicDrapes = {
+	table: {
+		north: [
+			["Velours", "", "Blackouts", "", "Louvres"],
+			["Open Wall", "", "", "", "Tilt Open"],
+			["Close Wall", "", "", "", "Tilt Close"],
+			["Open Windows", "", "Open Windows", "", "Open"],
+			["Close Windows", "", "Close Windows", "", "Close"],
+			["Advanced", "", "Advanced", "", ""],
+		],
+		south: [
+			["Velours", "", "Blackouts", "", "Louvres"],
+			["Open Wall", "", "Open Viewing", "", "Tilt Open"],
+			["Close Wall", "", "", "Close Viewing", "Tilt Close"],
+			["Open Windows", "", "Open Windows", "", "Open"],
+			["Close Windows", "", "Close Windows", "", "Close"],
+			["Advanced", "", "Advanced", "", ""],
+		],
+		combined: [
+			["Velours", "", "Blackouts", "", "Louvres"],
+			["Open Wall", "", "Open Viewing", "", "Tilt Open"],
+			["Close Wall", "", "", "Close Viewing", "Tilt Close"],
+			["Open Windows", "", "Open Windows", "", "Open"],
+			["Close Windows", "", "Close Windows", "", "Close"],
+			["Advanced", "", "Advanced", "", ""],
+		],
+		split: [
+			["North Velour", "North Black-outs", "North Louvres","", "South Velour", "South Black-outs", "South Louvres"],
+			["Open Wall"    , ""               , "Tilt Open"    ,"", "Open Wall"    , "Open Viewing"   , "Tilt Open"],
+			["Close Wall"   , ""               , "Tilt Close"   ,"", "Close Wall"   , "Close Viewing"  , "Tilt Close"],
+			["Open Windows" , "Open Windows"   , "Open"         ,"", "Open Windows" , "Open Windows"   , "Open"],
+			["Close Windows", "Close Windows"  , "Close"        ,"", "Close Windows", "Close Windows"  , "Close"],
+			["Advanced"     , "Advanced"       , ""             ,"", "Advanced"     , "Advanced"       , ""],
+		]
+	},
+}
 exports.paradigm = {
 	presets:{
 		north: [

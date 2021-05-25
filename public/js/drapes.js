@@ -4,59 +4,47 @@ socket.on("disconnect", (reason) => {
 	console.log("Socket disconnected: " + reason);
 });
 
-window.onload = function() {
-	headings = document.getElementById("headings").children;
-	for (var i=0; i < headings.length; i++) {
-		heading = headings.item(i);
-		["Open", "Close"].forEach((direction) => {
-			var node = document.createElement("td");
-			node.setAttribute("onclick", "clicked('" + heading.id + "','" + direction + "')");
-			node.setAttribute("class", "button " + direction);
-			node.innerText = direction;
-			document.getElementById(direction).appendChild(node);
-		});
-		if (heading.id == "louvres") {
-			["Tilt Open", "Tilt Close"].forEach((direction) => {
-				var node = document.createElement("td");
-				node.setAttribute("onclick", "clicked('" + heading.id + "','" + direction + "')");
-				node.setAttribute("class", "button " + direction);
-				node.innerText = direction;
-				document.getElementById(direction.replace(/^.* /, "")).appendChild(node);
-			});
+function makeTableBody(array, action) {
+	var tbody = document.createElement("tbody");
+	if (array==null) {
+		return tbody;
+	}
+	for (var row of array) {
+		var tr = tbody.appendChild(document.createElement("tr"));
+		for (var cell of row) {
+			var td = tr.appendChild(document.createElement("td"));
+			if ( cell != "") {
+				td.innerText = cell;
+				td.setAttribute("onclick", action + "(this)");
+				td.setAttribute("class", "button " + cell.replace(/[-]/g, ""));
+			}
 		}
 	}
+	return tbody;
 }
 
-function clicked(heading, direction) {
-	var drape = {
-		type: "",
-		id: "",
-		direction: direction.toLowerCase().replace(/ /, "")
-	};
-	switch (heading) {
-		case "wallDrapes":
-			drape.type = "velour";
-			drape.id = "Wall";
-		break;
-		case "windowDrapes":
-			drape.type = "velour";
-			drape.id = "Window";
-		break;
-		case "blackouts":
-			drape.type = "blackouts";
-			drape.id = "all";
-		break;
-		case "viewingBlind":
-			drape.type = "blackouts";
-			drape.id = "Viewing";
-		break;
-		case "louvres":
-			drape.type = "louvres";
-			drape.id = "all";
-		break;
-		default:
-			console.error("Unknown blind");
-			return;
+window.onload = function() {
+	socket.emit("getDrapeConfiguration", "basicDrapes", (config) => {
+		var tbody = makeTableBody(config.table, "drapeControl");
+		for (table of document.getElementsByClassName("drapeTable")) {
+			table.appendChild(tbody);
+		}
+	})
+}
+
+function drapeControl(caller) {
+	var column = Array.prototype.indexOf.call(caller.parentElement.children, caller);
+	var heading = caller.parentElement.parentElement.children[0].children[column].innerText;
+	var drapeType = heading.replace(/[-]/g,"").replace(/North |South /g, "").toLowerCase();
+	if (caller.innerText == "Advanced") {
+		window.location.href = '/pages/advancedDrapes.html?drapeType=' + drapeType;
+		return;
 	}
+
+	var drape = {
+		type: drapeType,
+		id: heading.match(/North |South /) + caller.innerText.replace(/Open|Close/g, "").trim(),
+		direction: caller.innerText.match(/Open|Close/)[0]
+	};
 	socket.emit("moveDrape", drape);
 }

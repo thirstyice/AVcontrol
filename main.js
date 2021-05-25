@@ -13,8 +13,9 @@ const extron = require("./modules/extron");
 const screens = require("./modules/screens");
 const projector = require("./modules/projector");
 const bluRay = require("./modules/bluRay");
+const louvres = require("./modules/louvres");
 
-var airWallIsDown = false;
+var airWallIsDown = true;
 var audioIsMuted = false;
 
 paradigm.addHandler("wall close Wall Aud1 + Aud2, Global", () => {
@@ -126,23 +127,24 @@ io.on('connection', (socket) => {
 	});
 
 	socket.on("moveDrape", (drape) => {
-		var patch = configuration[drape.type]["patch"][getControlSpace(socket.handshake.address)] ;
-		if (drape.type == "louvres") {
-			// TODO: louvre control
-			return;
-		}
-		for (key in patch) {
-			if (key.includes(drape.id)) {
-				switch (drape.type) {
-					case "velour":
-						velour[drape.direction.toLowerCase()](patch[key]);
-					break;
-					case "blackouts":
-						blackouts.move(patch[key], drape.direction.toLowerCase());
-					break;
-					default: logger.error("Unknown Drape Type: " + drape.type);
+		console.info("Moving: " + drape.id + drape.type + drape.direction + ";");
+		var controlSpace = getControlSpace(socket.handshake.address)
+		var patch = configuration[drape.type]["patch"];
+		switch (drape.type) {
+			case "louvres":
+				if (controlSpace == "split") {
+					controlSpace = drape.id.match(/North|South/)[0].toLowerCase();
+					drape.id = drape.id.replace(/North |South /, "");
 				}
-			}
+				louvres[drape.id.toLowerCase() + drape.direction](patch[controlSpace])
+			break;
+			case "velour":
+				velour[drape.direction.toLowerCase()](patch[controlSpace][drape.id]);
+			break;
+			case "blackouts":
+				blackouts.move(patch[controlSpace][drape.id], drape.direction.toLowerCase());
+			break;
+			default: logger.error("Unknown Drape Type: " + drape.type);
 		}
 	});
 	socket.on("getExtronConfiguration", (callback) => {

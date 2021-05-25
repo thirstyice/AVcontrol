@@ -33,6 +33,6 @@ a {
 	background-color: #444;
 	cursor: pointer;
 }
-body .button:hover {
-	background-color: #000;
+.button:hover {
+	background-color: #000 !important;
 }
