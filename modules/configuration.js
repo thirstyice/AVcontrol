@@ -387,7 +387,7 @@ exports.louvres = {
 exports.basicDrapes = {
 	table: {
 		north: [
-			["Velours", "", "Blackouts", "", "Louvres"],
+			["Velour", "", "Blackouts", "", "Louvres"],
 			["Open Wall", "", "", "", "Tilt Open"],
 			["Close Wall", "", "", "", "Tilt Close"],
 			["Open Windows", "", "Open Windows", "", "Open"],
@@ -395,7 +395,7 @@ exports.basicDrapes = {
 			["Advanced", "", "Advanced", "", "Auto"],
 		],
 		south: [
-			["Velours", "", "Blackouts", "", "Louvres"],
+			["Velour", "", "Blackouts", "", "Louvres"],
 			["Open Wall", "", "Open Viewing", "", "Tilt Open"],
 			["Close Wall", "", "", "Close Viewing", "Tilt Close"],
 			["Open Windows", "", "Open Windows", "", "Open"],
@@ -403,7 +403,7 @@ exports.basicDrapes = {
 			["Advanced", "", "Advanced", "", "Auto"],
 		],
 		combined: [
-			["Velours", "", "Blackouts", "", "Louvres"],
+			["Velour", "", "Blackouts", "", "Louvres"],
 			["Open Wall", "", "Open Viewing", "", "Tilt Open"],
 			["Close Wall", "", "Close Viewing", "", "Tilt Close"],
 			["Open Windows", "", "Open Windows", "", "Open"],
