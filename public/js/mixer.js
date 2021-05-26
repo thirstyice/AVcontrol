@@ -1,30 +1,5 @@
 const socket = io();
 
-socket.on("audioSlider", (sliderValues) => {
-	} else {
-		if (typeof sliderValues.level != "undefined") {
-			var slider = document.getElementById("audioSlider")
-			if (slider !=null) {
-				slider.setAttribute("value", sliderValues.level);
-				// Dumb hack to get the updated value to draw by forcing redraw of slider
-				document.getElementById("sliderContainer").style.display = "none";
-				document.getElementById("sliderContainer").style.display = "table-cell";
-			}
-		}
-		if (typeof sliderValues.muted != "undefined") {
-			var muteButton = document.getElementById("muteButton")
-			if (muteButton !=null) {
-				muteButton.setAttribute("class", sliderValues.muted ? "muted" : "");
-				muteButton.innerText = sliderValues.muted ? "Muted" : "Mute";
-				var slider = document.getElementById("audioSlider")
-				if (slider !=null) {
-					slider.setAttribute("class", sliderValues.muted ? "disabled" : "");
-				}
-			}
-		}
-	}
-});
-
 socket.on("setMixerValues", (values) => {
 	for (device in values) {
 		var sliders = document.getElementsByClassName("slider " + device);
@@ -41,6 +16,7 @@ socket.on("setMixerValues", (values) => {
 					muteButton.classList.add("muted")
 				} else {
 					muteButton.classList.remove("muted");
+				}
 			}
 		}
 	}
@@ -73,7 +49,7 @@ function makeTableBody(array) {
 			slider.setAttribute("class", "slider " + cell.replace(/[-]/g, ""));
 			muteButton.innerText = "Mute";
 			muteButton.setAttribute("onclick", "mute('" + cell + "')");
-			muteButton.setAttribute("class", "button " + cell.replace(/[-]/g, ""));
+			muteButton.setAttribute("class", "button mute " + cell.replace(/[-]/g, ""));
 		}
 	}
 	return tbody;
