@@ -6,6 +6,10 @@ th {
 .sliderContainer {
 	background-color: #333;
 }
+.Reset.button {
+	width:100px;
+	background-color: #335;
+}
 .mute.button {
 	width:100px;
 }

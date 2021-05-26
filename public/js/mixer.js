@@ -73,3 +73,11 @@ function changeLevel(device) {
 	}
 	socket.emit("mixerChangeLevel", level);
 }
+function resetLevels() {
+	var tbody = document.getElementsByClassName("mixerTable")[0].children[0];
+	for (row of tbody.children) {
+		var device = row.children[0].innerText;
+		console.log("Reset " + device);
+		socket.emit("mixerChangeLevel", {device:device,level:0});
+	}
+}
