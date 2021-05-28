@@ -1,4 +1,9 @@
 const socket = io();
+
+socket.on("refresh", () => {
+	location.reload();
+});
+
 function makeTableBody(array, action) {
 	var tbody = document.createElement("tbody");
 	if (array==null) {
