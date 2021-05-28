@@ -19,8 +19,11 @@ const louvres = require("./modules/louvres");
 var airWallIsDown = false;
 
 function airWallDidMove(isDown) {
-	airWallIsDown = isDown;
-	io.emit("refresh");
+	if (airWallIsDown != isDown) {
+		console.info("Airwall moved " + isDown?"down":"up");
+		airWallIsDown = isDown;
+		io.emit("refresh");
+	}
 }
 
 paradigm.addHandler("wall close Wall Aud1 + Aud2, Global", () => {
@@ -90,6 +93,9 @@ io.on('connection', (socket) => {
 
 		io.emit("set-system-info", info);
 	});
+	socket.on("refreshAirwallStatus", () => {
+		paradigm.send("wall get Wall Aud1 + Aud2");
+	})
 
 	socket.on("getSystemShutdownConfiguration", (callback) => {
 		callback(configuration.systemShutdown.table[getControlSpace(socket.handshake.address)]);

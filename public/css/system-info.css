@@ -4,14 +4,14 @@ table {
 	margin-top: 10px;
 	height: auto;
 }
-tr>td {
+#info tr>td {
 	height: 1px;
 }
-tr>td:last-child {
+#info tr>td:last-child {
 	text-align: left;
 	width: 50%;
 }
-tr>td:first-child {
+#info tr>td:first-child {
 	text-align: right;
 	width:50%;
 }
