@@ -4,6 +4,17 @@ socket.on("refresh", () => {
 	location.reload();
 });
 
+socket.on("connect", () => {
+	document.getElementById("disconnectModal").style.display = "none";
+});
+socket.on("disconnect", (reason) => {
+	if (reason === "io server disconnect") {
+		socket.connect();
+	}
+	document.getElementById("disconnectModal").style.display = "block";
+});
+
+
 function makeTableBody(array, action) {
 	var tbody = document.createElement("tbody");
 	if (array==null) {

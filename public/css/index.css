@@ -80,37 +80,3 @@ tbody > tr > th {
 .button.Base.State {
 	background-color: #422;
 }
-
-
-/* Modal Stuff */
-.modal {
-	display: none;
-	position: fixed;
-	z-index: 1;
-	padding-top: 20px;
-	left: 0;
-	top: 0;
-	width: 100%;
-	height: 100%;
-	background-color: #000;
-	background-color: rgba(0, 0, 0, 0.5);
-}
-.modalContent {
-	width: 80%;
-	height: 80%;
-	background-color: #222;
-	margin-left: auto;
-	margin-right: auto;
-	padding: 15px;
-	padding-top: 5px;
-	min-height: 320px;
-	position: relative;
-}
-.modalClose {
-	position:absolute;
-	top:10px;
-	left: 10px;
-	font-weight: bold;
-	font-size: 30px;
-	cursor: pointer;
-}
