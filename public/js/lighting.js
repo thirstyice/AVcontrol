@@ -20,9 +20,7 @@ function makeTableBody(array, action) {
 window.onload = function() {
 	socket.emit("getLightingPresets", (config) => {
 		var tbody = makeTableBody(config, "activatePreset");
-		for (table of document.getElementsByClassName("lightingTable")) {
-			table.appendChild(tbody);
-		}
+		document.getElementById("lightingTable").appendChild(tbody);
 	});
 }
 function activatePreset(preset) {

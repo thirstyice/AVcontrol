@@ -13,7 +13,7 @@ th {
 .mute.button {
 	width:100px;
 }
-.mixerTable .slider {
+#mixerTable .slider {
 	height: 10px;
 	width: 90%;
 	appearance: none;
@@ -22,7 +22,7 @@ th {
 	outline: none;
 
 }
-.mixerTable .slider::-webkit-slider-thumb {
+#mixerTable .slider::-webkit-slider-thumb {
 	-webkit-appearance: none;
 	appearance: none;
 	width: 25px;
@@ -31,7 +31,7 @@ th {
 	cursor: pointer;
 }
 
-.mixerTable .slider::-moz-range-thumb {
+#mixerTable .slider::-moz-range-thumb {
   -webkit-appearance: none;
   appearance: none;
   width: 25px;

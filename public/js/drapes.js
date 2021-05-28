@@ -26,9 +26,7 @@ function makeTableBody(array, action) {
 window.onload = function() {
 	socket.emit("getDrapeConfiguration", "basicDrapes", (config) => {
 		var tbody = makeTableBody(config.table, "drapeControl");
-		for (table of document.getElementsByClassName("drapeTable")) {
-			table.appendChild(tbody);
-		}
+		document.getElementById("drapeTable").appendChild(tbody);
 	})
 }
 

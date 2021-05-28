@@ -58,9 +58,7 @@ function makeTableBody(array) {
 window.onload = function() {
 	socket.emit("getMixerConfiguration", (config) => {
 		var tbody = makeTableBody(config);
-		for (table of document.getElementsByClassName("mixerTable")) {
-			table.appendChild(tbody);
-		}
+		document.getElementById("mixerTable").appendChild(tbody);
 	})
 }
 function mute(device) {
@@ -74,8 +72,8 @@ function changeLevel(device) {
 	socket.emit("mixerChangeLevel", level);
 }
 function resetLevels() {
-	var tbody = document.getElementsByClassName("mixerTable")[0].children[0];
-	for (row of tbody.children) {
+	var tbody = document.getElementById("mixerTable").children[0];
+	for (row of Array.from(tbody.children)) {
 		var device = row.children[0].innerText;
 		console.log("Reset " + device);
 		socket.emit("mixerChangeLevel", {device:device,level:0});

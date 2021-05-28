@@ -24,28 +24,20 @@ window.onload = function() {
 	socket.emit("getExtronConfiguration", (config) => {
 		["video","audio"].forEach((mediaType) => {
 			var tbody = makeTableBody(config, mediaType);
-			for (table of document.getElementsByClassName(mediaType + "Table")) {
-				table.appendChild(tbody);
-			}
+			document.getElementById(mediaType + "Table").appendChild(tbody);
 		})
 	})
 	socket.emit("getScreenConfiguration", (config) => {
 		var tbody = makeTableBody(config, "screen");
-		for (table of document.getElementsByClassName("screenTable")) {
-			table.appendChild(tbody);
-		}
+		document.getElementById("screenTable").appendChild(tbody);
 	})
 	socket.emit("getProjectorConfiguration", (config) => {
 		var tbody = makeTableBody(config, "projector");
-		for (table of document.getElementsByClassName("projectorTable")) {
-			table.appendChild(tbody);
-		}
+		document.getElementById("projectorTable").appendChild(tbody);
 	});
 	socket.emit("getBluRayControlConfiguration", (config) => {
 		var tbody = makeTableBody(config, "bluRayControl");
-		for (table of document.getElementsByClassName("bluRayControlTable")) {
-			table.appendChild(tbody);
-		}
+		document.getElementById("bluRayControlTable").appendChild(tbody);
 	})
 }
 function audio(source) {

@@ -40,9 +40,7 @@ window.onload = function () {
 	}
 	socket.emit("getSystemShutdownConfiguration", (config) => {
 		var tbody = makeTableBody(config, "systemShutdown");
-		for (table of document.getElementsByClassName("systemShutdownTable")) {
-			table.appendChild(tbody);
-		}
+		document.getElementById("systemShutdownTable").appendChild(tbody);
 	});
 
 }

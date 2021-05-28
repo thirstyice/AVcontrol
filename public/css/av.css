@@ -11,19 +11,19 @@ tbody > tr > th {
 	font-size: 18px;
 	vertical-align: bottom;
 }
-.videoTable .button {
+#videoTable .button {
 	background-color: #442;
 }
-.audioTable .button {
+#audioTable .button {
 	background-color: #224;
 }
-.screenTable .button {
+#screenTable .button {
 	background-color: #542;
 }
-.projectorTable .button {
+#projectorTable .button {
 	background-color: #444;
 }
-.bluRayControlTable .button {
+#bluRayControlTable .button {
 	height: 40px;
 }
 .Off.button, .Return.button, .Mute.button, .Stop.button  {
