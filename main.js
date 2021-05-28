@@ -29,7 +29,7 @@ paradigm.addHandler("wall close Wall Aud1 + Aud2, Global", () => {
 paradigm.addHandler("wall open Wall Aud1 + Aud2, Global", () => {
 	airWallDidMove(true);
 });
-paradigm.send("wall get Wall Aud1 + Aud2");
+setTimeout(paradigm.send, 5000, "wall get Wall Aud1 + Aud2");
 
 
 
