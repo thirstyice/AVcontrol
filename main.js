@@ -16,21 +16,21 @@ const projector = require("./modules/projector");
 const bluRay = require("./modules/bluRay");
 const louvres = require("./modules/louvres");
 
-var airWallIsDown = false;
+var airWallIsDown = true;
 
 function airWallDidMove(isDown) {
 	if (airWallIsDown != isDown) {
-		console.info("Airwall moved " + isDown?"down":"up");
+		console.info("Airwall moved " + (isDown?"down":"up"));
 		airWallIsDown = isDown;
 		io.emit("refresh");
 	}
 }
 
-paradigm.addHandler("wall close Wall Aud1 + Aud2, Global", () => {
-	airWallDidMove(false);
-});
-paradigm.addHandler("wall open Wall Aud1 + Aud2, Global", () => {
+paradigm.addHandler(new RegExp(/wall close Wall Aud1 \+ Aud2, Global/), () => {
 	airWallDidMove(true);
+});
+paradigm.addHandler(new RegExp(/wall open Wall Aud1 \+ Aud2, Global/), () => {
+	airWallDidMove(false);
 });
 setTimeout(paradigm.send, 5000, "wall get Wall Aud1 + Aud2");
 

@@ -10,7 +10,7 @@ var messageHandlers = [[],[]];
 
 function send(sendString) {
 	console.info("Paradigm: sending: " + sendString);
-	serialport.write(sendString + "\n");
+	serialport.write(sendString + "\r");
 }
 exports.send = send;
 
@@ -44,12 +44,14 @@ exports.removeHandler = removeHandler;
 const parser = serialport.pipe(new Readline({ delimiter: '\r' }))
 parser.on('data', function (data) {
 	// var data = port.read()
-  console.info('Paradigm data:', data);
+  console.info('Paradigm data: '+ data);
 	if (data.match(/^error/)) {
 		console.error("Paradigm: " + data);
 	}
 	messageHandlers[0].forEach( (message, index) => {
+		console.info("Paradigm: testing data against: " + message);
 		if (message.test(data)) {
+			console.info("Paradigm: handling: " + message);
 			messageHandlers[1][index](data);
 		}
 	});
