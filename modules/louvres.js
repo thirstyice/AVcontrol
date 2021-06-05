@@ -1,10 +1,10 @@
 const SerialPort = require("serialport");
 const port = new SerialPort(
-	"/dev/tty.usbserial-14240",
+	"/dev/null",
 	{baudRate: 38400, dataBits: 8, stopBits: 1, parity: 'none'}
 );
 port.on('error', (err) => {
-	console.error("Screens: " + err);
+	console.error("Louvres: " + err);
 });
 
 function sendCommand(command) {
