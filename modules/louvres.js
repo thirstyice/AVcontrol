@@ -1,7 +1,7 @@
 const SerialPort = require("serialport");
 const port = new SerialPort(
-	"/dev/null",
-	{baudRate: 2400, dataBits: 8, stopBits: 1, parity: 'none'}
+	"/dev/tty.usbserial-14240",
+	{baudRate: 38400, dataBits: 8, stopBits: 1, parity: 'none'}
 );
 port.on('error', (err) => {
 	console.error("Screens: " + err);
