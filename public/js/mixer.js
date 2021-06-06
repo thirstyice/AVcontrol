@@ -1,4 +1,7 @@
 const socket = io("/mixer");
+socket.on("error", (error) => {
+	alert("Warning: " + error);
+});
 
 socket.on("setMixerValues", (values) => {
 	for (device in values) {

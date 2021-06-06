@@ -1,4 +1,7 @@
 const socket = io("/av");
+socket.on("error", (error) => {
+	alert("Warning: " + error);
+});
 
 function makeTableBody(array, action) {
 	var tbody = document.createElement("tbody");

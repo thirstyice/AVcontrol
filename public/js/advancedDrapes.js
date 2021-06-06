@@ -1,4 +1,8 @@
 const socket = io("/drapes");
+socket.on("error", (error) => {
+	alert("Warning: " + error);
+});
+
 var url = new URL(window.location)
 var drapeType;
 if (url.searchParams.has("drapeType")) {

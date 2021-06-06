@@ -1,4 +1,7 @@
 const socket = io("/drapes");
+socket.on("error", (error) => {
+	alert("Warning: " + error);
+});
 
 socket.on("disconnect", (reason) => {
 	console.log("Socket disconnected: " + reason);

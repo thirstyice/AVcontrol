@@ -1,4 +1,7 @@
 const socket = io("/index");
+socket.on("error", (error) => {
+	alert("Warning: " + error);
+});
 
 socket.on("refresh", () => {
 	location.reload();
