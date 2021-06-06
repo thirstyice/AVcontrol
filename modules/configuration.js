@@ -79,26 +79,26 @@ exports.tesira = {
 	},
 	patch: {
 		north: {
-			Boxes: 16,
-			Pgm: 14,
+			Boxes: "Level16",
+			Pgm: "Level14",
 		},
 		south: {
-			Boxes: 13,
-			Pgm: 15,
+			Boxes: "Level13",
+			Pgm: "Level15",
 		},
 		combined: {
-			"North Boxes": 16,
-			"North Pgm": 14,
-			"South Boxes": 13,
-			"South Pgm": 15,
-			"Cinema": 6,
+			"North Boxes": "Level16",
+			"North Pgm": "Level14",
+			"South Boxes": "Level13",
+			"South Pgm": "Level15",
+			"Cinema": "Level6",
 		},
 		split: {
-			"North Boxes": 16,
-			"North Pgm": 14,
-			"South Boxes": 13,
-			"South Pgm": 15,
-			"Cinema": 6,
+			"North Boxes": "Level16",
+			"North Pgm": "Level14",
+			"South Boxes": "Level13",
+			"South Pgm": "Level15",
+			"Cinema": "Level6",
 		}
 	}
 }

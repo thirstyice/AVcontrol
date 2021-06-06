@@ -62,18 +62,6 @@ app.use("/", express.static(__dirname + "/public"));
 var server = https.createServer(httpsOptions, app);
 const io = new Server(server);
 
-async function updateMixerDevice(deviceId) {
-	for (socket in io.sockets.sockets) {
-		try {
-			var level = await tesira.getLevel(deviceId);
-			var muted = await tesira.getMute(deviceId);
-		} catch (e) {
-			console.warn(e)
-		}
-		socket.emit("setMixerValues", { [device] : { level: level, muted: muted }});
-	}
-}
-
 io.on('connection', (socket) => {
 	socket.onAny((event, args) => {
 		logger.info("Recieved: " + event + " from: " + socket.handshake.address);
@@ -126,9 +114,21 @@ io.on('connection', (socket) => {
 			}
 			for (device in configuration.tesira.patch[controlSpace]) {
 				var deviceId = configuration.tesira.patch[controlSpace][device];
-				tesira.setLevel(deviceId, 0);
 				tesira.setMute(deviceId, true);
-				updateMixerDevice(deviceId);
+				tesira.setLevel(deviceId, 0);
+			}
+			async () => {
+				try {
+					for (device of configuration.tesira.table[controlSpace]) {
+						devices[device] = {};
+						var deviceId = configuration.tesira.patch[controlSpace][device];
+						devices[device].level = await tesira.getLevel(deviceId);
+						devices[device].muted = await tesira.getMute(deviceId);
+					}
+					io.emit("setMixerValues", devices);
+				} catch (err) {
+					socket.emit("error", err)
+				}
 			}
 			blackouts.move(configuration.blackouts.patch[controlSpace].all,"open")
 		}
@@ -213,22 +213,43 @@ io.on('connection', (socket) => {
 
 	socket.on("getMixerConfiguration", async (callback) => {
 		var controlSpace = getControlSpace(socket.handshake.address);
-		var devices = configuration.tesira.table[controlSpace];
-		callback(devices);
-		for (device of devices) {
-			var deviceId = configuration.tesira.patch[controlSpace][device];
-			updateMixerDevice(deviceId);
+		var devices = {};
+		callback(configuration.tesira.table[controlSpace]);
+		try {
+			for (device of configuration.tesira.table[controlSpace]) {
+				devices[device] = {};
+				var deviceId = configuration.tesira.patch[controlSpace][device];
+				devices[device].level = await tesira.getLevel(deviceId);
+				devices[device].muted = await tesira.getMute(deviceId);
+			}
+			io.emit("setMixerValues", devices);
+		} catch (err) {
+			socket.emit("error", err)
 		}
 	});
 	socket.on("mixerToggleMute", (device) => {
-		var device = configuration.tesira.patch[getControlSpace(socket.handshake.address)][device];
-		tesira.toggleMute(device);
-		updateMixerDevice(device);
+		var deviceId = configuration.tesira.patch[getControlSpace(socket.handshake.address)][device];
+		tesira.toggleMute(deviceId)
+		.then( () => {
+			tesira.getMute(deviceId)
+			.then( (muted) => {
+				io.emit("setMixerValues", {[device]: { muted: muted }} )
+			})
+		}).catch( (err) => {
+			socket.emit("error", err);
+		});
 	});
 	socket.on("mixerChangeLevel", (level) => {
 		var deviceId = configuration.tesira.patch[getControlSpace(socket.handshake.address)][level.device];
-		tesira.setLevel(deviceId, level.level);
-		updateMixerDevice(deviceId);
+		tesira.setLevel(deviceId, level.level)
+		.then( () => {
+			tesira.getLevel(deviceId)
+			.then( (newLevel) => {
+				io.emit("setMixerValues", {[level.device]: { level: newLevel }} )
+			})
+		}).catch( (err) => {
+			socket.emit("error", err);
+		});
 	});
 	socket.on("getLightingPresets", (callback) => {
 		callback(configuration.paradigm.presets[getControlSpace(socket.handshake.address)]);

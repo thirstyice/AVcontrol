@@ -45,7 +45,7 @@ function makeTableBody(array) {
 			slider.setAttribute("type", "range");
 			slider.setAttribute("min", "-70");
 			slider.setAttribute("max", "6");
-			slider.setAttribute("onchange", "changeLevel('" + cell + "')");
+			slider.setAttribute("onchange", "changeLevel('" + cell + "', this.value)");
 			slider.setAttribute("class", "slider " + cell.replace(/[-]/g, ""));
 			muteButton.innerText = "Mute";
 			muteButton.setAttribute("onclick", "mute('" + cell + "')");
@@ -64,10 +64,10 @@ window.onload = function() {
 function mute(device) {
 	socket.emit("mixerToggleMute", device);
 }
-function changeLevel(device) {
+function changeLevel(device, value) {
 	var level = {
 		device: device,
-		level: this.value,
+		level: value,
 	}
 	socket.emit("mixerChangeLevel", level);
 }
