@@ -26,11 +26,16 @@ function airWallDidMove(isDown) {
 	}
 }
 
-paradigm.addHandler(new RegExp(/wall close Wall Aud1 \+ Aud2, Global/), () => {
-	airWallDidMove(true);
-});
-paradigm.addHandler(new RegExp(/wall open Wall Aud1 \+ Aud2, Global/), () => {
-	airWallDidMove(false);
+paradigm.emitter.on("wall", (data) => {
+	if (data.includes("Wall Aud1 + Aud2")) {
+		if (/open|close/.test(data)) {
+			airWallDidMove(data.includes("close"));
+		} else {
+			console.warn("Main: unknown wall state: " + data);
+		}
+	} else {
+		console.warn("Main: unknown wall: " + data);
+	}
 });
 setTimeout(paradigm.send, 5000, "wall get Wall Aud1 + Aud2");
 

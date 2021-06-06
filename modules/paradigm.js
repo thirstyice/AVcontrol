@@ -1,3 +1,6 @@
+const EventEmitter = require("events")
+const emitter = new EventEmitter();
+exports.emitter = emitter;
 const SerialPort = require("serialport");
 const Readline = require('@serialport/parser-readline')
 const serialPath = "/dev/null"
@@ -5,8 +8,6 @@ const serialport = new SerialPort(serialPath, {baudRate: 9600, dataBits: 8, stop
 serialport.on('error', (err) => {
 	console.error("Paradigm: " + err);
 });
-
-var messageHandlers = [[],[]];
 
 function send(sendString) {
 	console.info("Paradigm: sending: " + sendString);
@@ -27,19 +28,6 @@ exports.deactivate = function(presetName="", space="Global") {
 	}
 	send(sendString);
 }
-exports.addHandler = function (message, handler) {
-	messageHandlers[0].push(message);
-	messageHandlers[1].push(handler);
-}
-function removeHandler(messageToRemove, handlerToRemove) {
-	messageHandlers[0].forEach((message, index) => {
-		if (message == messageToRemove && messageHandlers[1][index] == handlerToRemove) {
-			messageHandlers[0].splice(index,1);
-			messageHandlers[1].splice(index,1);
-		}
-	});
-}
-exports.removeHandler = removeHandler;
 
 const parser = serialport.pipe(new Readline({ delimiter: '\r' }))
 parser.on('data', function (data) {
@@ -47,12 +35,10 @@ parser.on('data', function (data) {
   console.info('Paradigm data: '+ data);
 	if (data.match(/^error/)) {
 		console.error("Paradigm: " + data);
+		emitter.emit("error", new Error(data));
+	} else {
+		var type = data.match(/^[\w-]*?/)[0];
+		var response = data.replace(/^[\w-]*?/,"").trim();
+		emitter.emit(type, response);
 	}
-	messageHandlers[0].forEach( (message, index) => {
-		console.info("Paradigm: testing data against: " + message);
-		if (message.test(data)) {
-			console.info("Paradigm: handling: " + message);
-			messageHandlers[1][index](data);
-		}
-	});
 })
