@@ -1,4 +1,4 @@
-const socket = io();
+const socket = io("/drapes");
 var url = new URL(window.location)
 var drapeType;
 if (url.searchParams.has("drapeType")) {

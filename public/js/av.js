@@ -1,4 +1,4 @@
-const socket = io();
+const socket = io("/av");
 
 function makeTableBody(array, action) {
 	var tbody = document.createElement("tbody");

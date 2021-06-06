@@ -1,4 +1,4 @@
-const socket = io();
+const socket = io("/system-info");
 
 socket.on("disconnect", (reason) => {
 	console.log("Socket disconnected: " + reason);

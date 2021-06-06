@@ -66,25 +66,14 @@ io.on('connection', (socket) => {
 	socket.onAny((event, args) => {
 		logger.info("Recieved: " + event + " from: " + socket.handshake.address);
 	});
-	socket.on("set-system-info", () => {
-		var ips = [];
-		for (const [key, value] of io.sockets.sockets) {
-			if (ips.includes(value.handshake.address) === false) {
-				ips.push(value.handshake.address);
-			}
-		}
-		var info = {
-			version:require("./package.json").version,
-			clients: ips.length,
-			airwall_status: airWallIsDown ? "Down" : "Up"
-		}
+});
 
-		io.emit("set-system-info", info);
-	});
-	socket.on("refreshAirwallStatus", () => {
-		paradigm.send("wall get Wall Aud1 + Aud2");
-	})
+//####################
+//    INDEX:
+//####################
 
+const index = io.of("/index");
+index.on("connection", (socket) => {
 	socket.on("getSystemShutdownConfiguration", (callback) => {
 		callback(configuration.systemShutdown.table[getControlSpace(socket.handshake.address)]);
 	})
@@ -134,6 +123,14 @@ io.on('connection', (socket) => {
 		}
 		paradigm.deactivate("", configuration.paradigm.spaces[controlSpace]);
 	});
+});
+
+//####################
+//    DRAPES:
+//####################
+
+const drapes = io.of("/drapes");
+drapes.on("connection", (socket) => {
 
 	socket.on("getDrapeConfiguration", (drapeType, callback) => {
 		var config = {};
@@ -170,6 +167,15 @@ io.on('connection', (socket) => {
 			default: logger.error("Unknown Drape Type: " + drape.type);
 		}
 	});
+});
+
+//####################
+//    AV:
+//####################
+
+const av = io.of("/av");
+av.on("connection", (socket) => {
+
 	socket.on("getExtronConfiguration", (callback) => {
 		callback(configuration.extron.table.inputs[getControlSpace(socket.handshake.address)]);
 	})
@@ -209,7 +215,41 @@ io.on('connection', (socket) => {
 	socket.on("bluRay", (command) => {
 		bluRay.sendCommand(configuration.bluRayControl.patch[command]);
 	});
+});
 
+//####################
+//    SYSTEM INFO:
+//####################
+
+const systemInfo = io.of("/system-info");
+systemInfo.on("connection", (socket) => {
+
+	socket.on("set-system-info", () => {
+		var ips = [];
+		for (const [key, value] of io.sockets.sockets) {
+			if (ips.includes(value.handshake.address) === false) {
+				ips.push(value.handshake.address);
+			}
+		}
+		var info = {
+			version:require("./package.json").version,
+			clients: ips.length,
+			airwall_status: airWallIsDown ? "Down" : "Up"
+		}
+
+		systemInfo.emit("set-system-info", info);
+	});
+	socket.on("refreshAirwallStatus", () => {
+		paradigm.send("wall get Wall Aud1 + Aud2");
+	})
+});
+
+//####################
+//    MIXER:
+//####################
+
+const mixer = io.of("/mixer");
+mixer.on("connection", (socket) => {
 
 	socket.on("getMixerConfiguration", async (callback) => {
 		var controlSpace = getControlSpace(socket.handshake.address);
@@ -222,7 +262,7 @@ io.on('connection', (socket) => {
 				devices[device].level = await tesira.getLevel(deviceId);
 				devices[device].muted = await tesira.getMute(deviceId);
 			}
-			io.emit("setMixerValues", devices);
+			mixer.emit("setMixerValues", devices);
 		} catch (err) {
 			socket.emit("error", err)
 		}
@@ -233,7 +273,7 @@ io.on('connection', (socket) => {
 		.then( () => {
 			tesira.getMute(deviceId)
 			.then( (muted) => {
-				io.emit("setMixerValues", {[device]: { muted: muted }} )
+				mixer.emit("setMixerValues", {[device]: { muted: muted }} )
 			})
 		}).catch( (err) => {
 			socket.emit("error", err);
@@ -245,12 +285,21 @@ io.on('connection', (socket) => {
 		.then( () => {
 			tesira.getLevel(deviceId)
 			.then( (newLevel) => {
-				io.emit("setMixerValues", {[level.device]: { level: newLevel }} )
+				mixer.emit("setMixerValues", {[level.device]: { level: newLevel }} )
 			})
 		}).catch( (err) => {
 			socket.emit("error", err);
 		});
 	});
+});
+
+//####################
+//    LIGHTING:
+//####################
+
+const lighting = io.of("/lighting");
+lighting.on("connection", (socket) => {
+
 	socket.on("getLightingPresets", (callback) => {
 		callback(configuration.paradigm.presets[getControlSpace(socket.handshake.address)]);
 	});
@@ -265,7 +314,7 @@ io.on('connection', (socket) => {
 		}
 		paradigm.activate(preset, space);
 	});
-});
+})
 
 // Redirect http to https
 var http = express();

@@ -1,4 +1,4 @@
-const socket = io();
+const socket = io("/lighting");
 function makeTableBody(array, action) {
 	var tbody = document.createElement("tbody");
 	if (array==null) {

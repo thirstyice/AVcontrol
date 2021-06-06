@@ -1,4 +1,4 @@
-const socket = io();
+const socket = io("/drapes");
 
 socket.on("disconnect", (reason) => {
 	console.log("Socket disconnected: " + reason);

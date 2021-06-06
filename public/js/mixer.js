@@ -1,4 +1,4 @@
-const socket = io();
+const socket = io("/mixer");
 
 socket.on("setMixerValues", (values) => {
 	for (device in values) {

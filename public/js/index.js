@@ -1,4 +1,4 @@
-const socket = io();
+const socket = io("/index");
 
 socket.on("refresh", () => {
 	location.reload();
