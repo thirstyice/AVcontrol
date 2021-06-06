@@ -12,7 +12,4 @@ function send(sendString) {
 	port.write("#" + sendString + "\r");
 }
 
-exports.sendCommand = function (command) {
-	console.info("Blu-Ray: sending:" + command)
-	send(command);
-}
+exports.sendCommand = send;
