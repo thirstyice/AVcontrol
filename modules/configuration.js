@@ -65,7 +65,7 @@ exports.extron = {
 exports.tesira = {
 	table: {
 		north: [
-			"Boxes", "Pgm"
+			"Boxes", "Pgm", "Cinema"
 		],
 		south: [
 			"Boxes", "Pgm"
@@ -81,6 +81,7 @@ exports.tesira = {
 		north: {
 			Boxes: "Level16",
 			Pgm: "Level14",
+			Cinema: "Level6",
 		},
 		south: {
 			Boxes: "Level13",
