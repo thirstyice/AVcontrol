@@ -69,63 +69,6 @@ io.on('connection', (socket) => {
 });
 
 //####################
-//    INDEX:
-//####################
-
-const index = io.of("/index");
-index.on("connection", (socket) => {
-	socket.on("getSystemShutdownConfiguration", (callback) => {
-		callback(configuration.systemShutdown.table[getControlSpace(socket.handshake.address)]);
-	})
-	socket.on("systemShutdown", (command) => {
-		console.info("Shutdown: " + command);
-		command = command.replace("Shutdown ", "");
-		var controlSpace = getControlSpace(socket.handshake.address);
-		if (controlSpace == "split") {
-			controlSpace = command.match(/North|South/)[0].toLowerCase();
-			command = command.replace(/North |South /, "");
-		}
-		switch (controlSpace) {
-			case "north": case "combined":
-				projector.off();
-				bluRay.sendCommand("POF");
-			break;
-		}
-		if (/Base State/.test(command)) {
-			louvres.auto(configuration.louvres.patch[controlSpace]);
-			velour.open(configuration.velour.patch[controlSpace].Windows);
-			velour.open(configuration.velour.patch[controlSpace].Wall);
-			if (controlSpace != "north") {
-				screens.raiseSouth();
-			}
-			if (controlSpace != "south") {
-				screens.raiseNorth();
-			}
-			for (device in configuration.tesira.patch[controlSpace]) {
-				var deviceId = configuration.tesira.patch[controlSpace][device];
-				tesira.setMute(deviceId, true);
-				tesira.setLevel(deviceId, 0);
-			}
-			async () => {
-				try {
-					for (device of configuration.tesira.table[controlSpace]) {
-						devices[device] = {};
-						var deviceId = configuration.tesira.patch[controlSpace][device];
-						devices[device].level = await tesira.getLevel(deviceId);
-						devices[device].muted = await tesira.getMute(deviceId);
-					}
-					io.emit("setMixerValues", devices);
-				} catch (err) {
-					socket.emit("error", err)
-				}
-			}
-			blackouts.move(configuration.blackouts.patch[controlSpace].all,"open")
-		}
-		paradigm.deactivate("", configuration.paradigm.spaces[controlSpace]);
-	});
-});
-
-//####################
 //    DRAPES:
 //####################
 
@@ -249,45 +192,42 @@ systemInfo.on("connection", (socket) => {
 //####################
 
 const mixer = io.of("/mixer");
+async function updateMixerValues() {
+	for ([key, socket] of mixer.sockets) {
+		var devices = {};
+		controlSpace = getControlSpace(socket.handshake.address);
+		for (device of configuration.tesira.table[controlSpace]) {
+			devices[device] = {};
+			var deviceId = configuration.tesira.patch[controlSpace][device];
+			devices[device].level = await tesira.getLevel(deviceId);
+			devices[device].muted = await tesira.getMute(deviceId);
+		}
+		socket.emit("setMixerValues", devices);
+	}
+}
 mixer.on("connection", (socket) => {
 
 	socket.on("getMixerConfiguration", async (callback) => {
 		var controlSpace = getControlSpace(socket.handshake.address);
 		var devices = {};
 		callback(configuration.tesira.table[controlSpace]);
-		try {
-			for (device of configuration.tesira.table[controlSpace]) {
-				devices[device] = {};
-				var deviceId = configuration.tesira.patch[controlSpace][device];
-				devices[device].level = await tesira.getLevel(deviceId);
-				devices[device].muted = await tesira.getMute(deviceId);
-			}
-			mixer.emit("setMixerValues", devices);
-		} catch (err) {
-			socket.emit("error", err)
-		}
+		updateMixerValues().catch((err) => {
+			socket.emit("error", err);
+		});
 	});
 	socket.on("mixerToggleMute", (device) => {
 		var deviceId = configuration.tesira.patch[getControlSpace(socket.handshake.address)][device];
 		tesira.toggleMute(deviceId)
-		.then( () => {
-			tesira.getMute(deviceId)
-			.then( (muted) => {
-				mixer.emit("setMixerValues", {[device]: { muted: muted }} )
-			})
-		}).catch( (err) => {
+		.then( () => { updateMixerValues() })
+		.catch( (err) => {
 			socket.emit("error", err);
 		});
 	});
 	socket.on("mixerChangeLevel", (level) => {
 		var deviceId = configuration.tesira.patch[getControlSpace(socket.handshake.address)][level.device];
 		tesira.setLevel(deviceId, level.level)
-		.then( () => {
-			tesira.getLevel(deviceId)
-			.then( (newLevel) => {
-				mixer.emit("setMixerValues", {[level.device]: { level: newLevel }} )
-			})
-		}).catch( (err) => {
+		.then( () => { updateMixerValues() })
+		.catch( (err) => {
 			socket.emit("error", err);
 		});
 	});
@@ -315,6 +255,58 @@ lighting.on("connection", (socket) => {
 		paradigm.activate(preset, space);
 	});
 })
+
+//####################
+//    INDEX:
+//####################
+
+const index = io.of("/index");
+index.on("connection", (socket) => {
+	socket.on("getSystemShutdownConfiguration", (callback) => {
+		callback(configuration.systemShutdown.table[getControlSpace(socket.handshake.address)]);
+	})
+	socket.on("systemShutdown", (command) => {
+		console.info("Shutdown: " + command);
+		command = command.replace("Shutdown ", "");
+		var controlSpace = getControlSpace(socket.handshake.address);
+		if (controlSpace == "split") {
+			controlSpace = command.match(/North|South/)[0].toLowerCase();
+			command = command.replace(/North |South /, "");
+		}
+		switch (controlSpace) {
+			case "north": case "combined":
+				projector.off();
+				bluRay.sendCommand("POF");
+			break;
+		}
+		if (/Base State/.test(command)) {
+			louvres.auto(configuration.louvres.patch[controlSpace]);
+			velour.open(configuration.velour.patch[controlSpace].Windows);
+			velour.open(configuration.velour.patch[controlSpace].Wall);
+			if (controlSpace != "north") {
+				screens.raiseSouth();
+			}
+			if (controlSpace != "south") {
+				screens.raiseNorth();
+			}
+			(async function () {
+				for (device in configuration.tesira.patch[controlSpace]) {
+					var deviceId = configuration.tesira.patch[controlSpace][device];
+					await tesira.setMute(deviceId, true);
+					await tesira.setLevel(deviceId, 0);
+				}
+			})().then(() => {
+				updateMixerValues()
+			}).catch( (err) => {
+				console.error("System shutdown: " + err);
+				socket.emit("error", err);
+			})
+			blackouts.move(configuration.blackouts.patch[controlSpace].all,"open")
+		}
+		paradigm.deactivate("", configuration.paradigm.spaces[controlSpace]);
+	});
+});
+
 
 // Redirect http to https
 var http = express();
