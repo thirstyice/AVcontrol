@@ -5,7 +5,7 @@ socket.on("setMixerValues", (values) => {
 		var sliders = document.getElementsByClassName("slider " + device);
 		if (typeof values[device].level != "undefined") {
 			for (slider of sliders) {
-				slider.setAttribute("value", values[device].level);
+				slider.value = values[device].level;
 			}
 
 		}
